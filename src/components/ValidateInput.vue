@@ -4,17 +4,18 @@
  * @Description: 自定义验证组件
   //TODO 实现规则的校验集合，并且可以校验多种类型的代码，string，email，password，null校验并且支持可拓展性
   //TODO 需要让这个组件实现v-model 功能 :value="inputRef.val" @input="updateValue" 发送出去
+  //TODO  v-bind="$attrs" 可以替换之前的类型，就可以支持选择类型了text password
  * @FilePath: \bohe\src\components\ValidateInput.vue
 -->
 <template>
   <div class="validate-input-container pb-3">
     <input
-      type="text"
       class="form-control"
       :value="inputRef.val"
       :class="{ 'is-invalid': inputRef.error }"
       @blur="validateInput"
       @input="updateValue"
+      v-bind="$attrs"
     />
     <span v-if="inputRef.error" class="invalid-feedback">{{ inputRef.message }}</span>
   </div>
@@ -40,7 +41,10 @@ export default defineComponent({
     rules: Array as PropType<RulesProp>,
     modelValue: String // 通过这个属性来支持v-model
   },
+  // !禁用Arrts的继承，让这个元素不用传到上个元素的根节点
+  inheritAttrs: false,
   setup(props, context) {
+    // console.log(context.attrs)
     // 输入要包含当前的值，包含错误，包含信息多对象集合
     const inputRef = reactive({
       val: props.modelValue || '',

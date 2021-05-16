@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-16 20:35:51
+ * @LastEditTime: 2021-05-16 21:53:56
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -14,22 +14,22 @@
       <div class="mb-3">
         <div class="mb-3">
           <label class="form-label">邮箱地址</label>
-          <validate-input :rules="emailRules" v-model="emailVal"></validate-input>
-          {{ emailVal }}
+          <validate-input
+            type="text"
+            :rules="emailRules"
+            v-model="emailVal"
+            placeholder="请输入邮箱地址"
+          ></validate-input>
         </div>
-        <label for="exampleInputEmail1" class="form-label">Email address</label>
-        <input
-          type="email"
-          class="form-control"
-          id="exampleInputEmail1"
-          v-model="emailRef.val"
-          @blur="validateEmail"
-        />
-        <div class="form-text" v-if="emailRef.error">{{ emailRef.message }}</div>
-      </div>
-      <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" />
+        <div class="mb-3">
+          <label class="form-label">密码</label>
+          <validate-input
+            type="password"
+            :rules="passwordRules"
+            v-model="passwordValue"
+            placeholder="请输入密码"
+          ></validate-input>
+        </div>
       </div>
     </form>
   </div>
@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 import ColumnList, { ColumnProps } from './components/ColumnList.vue'
 import GlobalHeader, { UserProps } from './components/GlobalHeader.vue'
@@ -93,9 +93,6 @@ const testData: ColumnProps[] = [
   }
 ]
 
-// 好用的邮箱格式正则表达式
-const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-
 export default defineComponent({
   name: 'App',
   components: {
@@ -104,32 +101,17 @@ export default defineComponent({
     ValidateInput
   },
   setup() {
-    const emailVal = ref('张三')
+    const emailVal = ref('')
+    const passwordValue = ref('')
     // 验证邮箱功能集合
     const emailRules: RulesProp = [
       { type: 'required', message: '电子邮箱地址不能为空' },
       { type: 'email', message: '请输入正确的电子邮箱格式' }
     ]
-    // 要包含当前的值，包含错误，包含信息多对象集合
-    const emailRef = reactive({
-      val: '',
-      error: false, // 没有错误
-      message: '' // 提示语
-    })
-    // 校验规则
-    const validateEmail = () => {
-      // trim()去除空格为空
-      if (emailRef.val.trim() === '') {
-        // 错误
-        emailRef.error = true
-        emailRef.message = 'You can not input anything!'
-        // 如果不满足正则表达式的匹配 test表示字符串是否匹配这个模式
-      } else if (!emailReg.test(emailRef.val)) {
-        emailRef.error = true
-        emailRef.message = 'should be vaild email!'
-      }
-    }
-    return { list: testData, currentUser, emailRef, validateEmail, emailRules, emailVal }
+    // 验证密码不能为空
+    const passwordRules: RulesProp = [{ type: 'required', message: '密码不能为空' }]
+
+    return { list: testData, currentUser, emailRules, passwordRules, passwordValue, emailVal }
   }
 })
 </script>
