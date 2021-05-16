@@ -2,7 +2,7 @@
  * @Author: your name
  * @Date: 2021-05-16 11:26:37
  * @Description: 自定义验证组件
-  //TODO 实现规则的校验集合，并且可以校验多种类型的代码，string，email，password，null并且支持可拓展性
+  //TODO 实现规则的校验集合，并且可以校验多种类型的代码，string，email，password，null校验并且支持可拓展性
  * @FilePath: \bohe\src\components\ValidateInput.vue
 -->
 <template>
@@ -44,28 +44,28 @@ export default defineComponent({
       error: false, // 没有错误
       message: '' // 提示语
     })
-    // 校验规则开始，由于多模式匹配，使用switch case来实现 便于拓展
+    // 校验规则开始，由于多模式匹配，使用switch case来实现
     const validateInput = () => {
       // 先判断传过来的rules有无
       if (props.rules) {
-        // ?every检查数组是否满足所有条件方法是否通过，通过就是true 一个不通过就是false
+        // every检查数组是否满足所有条件方法是否通过，通过就是true 一个不通过就是false
         const allPassed = props.rules.every((rule) => {
           let passed = true // 中间变量一开始通过
           inputRef.message = rule.message
           // !判断变量类型匹配
           switch (rule.type) {
             case 'required':
-              passed = inputRef.val.trim() !== '' // 去除空格以后不为空 true
+              passed = inputRef.val.trim() !== '' // 去除空格以后不为空
               break
             case 'email':
-              passed = emailReg.test(inputRef.val) // 匹配正则表达式 true
+              passed = emailReg.test(inputRef.val) // 匹配正则表达式
               break
             default:
               break
           }
-          return passed // T or F
+          return passed
         })
-        inputRef.error = !allPassed // allpassed=false no pass 让inputRef.error=false
+        inputRef.error = !allPassed // 发生错误
       }
     }
     return { validateInput, inputRef }
