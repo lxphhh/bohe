@@ -58,7 +58,7 @@ export default defineComponent({
       return props.list.map((column) => {
         // 不存在就使用本地的图片 添加本地图片用require关键字
         if (!column.avatar) {
-          column.avatar = require('@/assets/avatar.jpg')
+          column.avatar = require('@/assets/avatar.jpg') // !从本地拿的时候用require来导入
         }
         return column // 记得返回
       })

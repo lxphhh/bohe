@@ -12,6 +12,7 @@
       {{ title }}
     </a>
     <ul class="dropdown-menu" :style="{ display: 'block', textAlign: 'center' }" v-if="isOpen">
+      <!-- 自定义下拉框 -->
       <slot></slot>
     </ul>
   </div>

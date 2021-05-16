@@ -12,7 +12,7 @@
     class="navbar navbar-dark bs-teal justify-content-between mb-4 px-4"
     style="background-color: #20c997;"
   >
-    <a class="navbar-brand" href="#"><i class="iconfont icon-yezi- fontSize"></i>&nbsp;薄荷专栏</a>
+    <a class="navbar-brand" href="#"><i class="iconfont icon-yezi- fontStyle"></i>&nbsp;薄荷专栏</a>
     <ul v-if="!user.isLogin" class="list-inline mb-0">
       <li class="list-inline-item"><a href="#" class="btn btn-outline-light my-2">登陆</a></li>
       <li class="list-inline-item"><a href="#" class="btn btn-outline-light my-2">注册</a></li>
@@ -20,7 +20,7 @@
     <!-- 下拉选择框 -->
     <ul v-else class="list-inline mb-0">
       <li class="list-inline-item">
-        <dropdown :title="`你好 ${user.name}`">
+        <dropdown :title="`你好 ${user.name}!`">
           <dropdown-item><a href="#" class="dropdown-item">新建文章</a></dropdown-item>
           <dropdown-item disabled><a href="#" class="dropdown-item">编辑资料</a></dropdown-item>
           <dropdown-item><a href="#" class="dropdown-item">退出登录</a></dropdown-item>
@@ -36,6 +36,7 @@ import { defineComponent, PropType } from 'vue'
 import Dropdown from './Dropdown.vue'
 import DropdownItem from './DropdownItem.vue'
 
+// 用户需要存在的信息
 export interface UserProps {
   isLogin: boolean
   id?: string // 这两种类型可以不传，因为有isLogin的存在
@@ -59,7 +60,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.fontSize {
+.fontStyle {
   font-size: 18px;
   color: #fff;
   border: none;
