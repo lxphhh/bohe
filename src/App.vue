@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-17 00:08:24
+ * @LastEditTime: 2021-05-17 00:26:44
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -19,6 +19,7 @@
             :rules="emailRules"
             v-model="emailVal"
             placeholder="请输入邮箱地址"
+            ref="inputRef"
           >
           </validate-input>
         </div>
@@ -109,6 +110,8 @@ export default defineComponent({
     ValidateForm
   },
   setup() {
+    // 子组件ref id
+    const inputRef = ref<any>()
     const emailVal = ref('')
     // 验证邮箱功能集合
     const emailRules: RulesProp = [
@@ -120,8 +123,7 @@ export default defineComponent({
     const passwordRules: RulesProp = [{ type: 'required', message: '密码不能为空' }]
     // 接收到校验的结果
     const onFormSubmit = (res: boolean) => {
-      alert('1233')
-      console.log(res)
+      console.log('result', inputRef.value.validateInput())
     }
     return {
       list: testData,
@@ -130,7 +132,8 @@ export default defineComponent({
       passwordRules,
       passwordValue,
       emailVal,
-      onFormSubmit
+      onFormSubmit,
+      inputRef
     }
   }
 })

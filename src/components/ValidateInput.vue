@@ -73,7 +73,9 @@ export default defineComponent({
           return passed
         })
         inputRef.error = !allPassed // 发生错误
+        return allPassed // 对外返回错误或者失败
       }
+      return true // 如果props.rules不存在永远为true
     }
     // 需要支持v-model的方法 拿到键盘输入
     const updateValue = (e: KeyboardEvent) => {
