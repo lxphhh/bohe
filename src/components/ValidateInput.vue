@@ -3,6 +3,7 @@
  * @Date: 2021-05-16 11:26:37
  * @Description: 自定义验证组件
   //TODO 实现规则的校验集合，并且可以校验多种类型的代码，string，email，password，null校验并且支持可拓展性
+  //TODO 需要让这个组件实现v-model 功能 :value="inputRef.val" @input="updateValue" 发送出去
  * @FilePath: \bohe\src\components\ValidateInput.vue
 -->
 <template>
@@ -10,9 +11,10 @@
     <input
       type="text"
       class="form-control"
-      v-model="inputRef.val"
+      :value="inputRef.val"
       :class="{ 'is-invalid': inputRef.error }"
       @blur="validateInput"
+      @input="updateValue"
     />
     <span v-if="inputRef.error" class="invalid-feedback">{{ inputRef.message }}</span>
   </div>
@@ -35,12 +37,13 @@ export type RulesProp = RuleProp[]
 export default defineComponent({
   name: 'ValidateInput',
   props: {
-    rules: Array as PropType<RulesProp>
+    rules: Array as PropType<RulesProp>,
+    modelValue: String // 通过这个属性来支持v-model
   },
-  setup(props) {
-    // 要包含当前的值，包含错误，包含信息多对象集合
+  setup(props, context) {
+    // 输入要包含当前的值，包含错误，包含信息多对象集合
     const inputRef = reactive({
-      val: '',
+      val: props.modelValue || '',
       error: false, // 没有错误
       message: '' // 提示语
     })
@@ -68,7 +71,16 @@ export default defineComponent({
         inputRef.error = !allPassed // 发生错误
       }
     }
-    return { validateInput, inputRef }
+    // 需要支持v-model的方法 拿到键盘输入
+    const updateValue = (e: KeyboardEvent) => {
+      // 拿到键盘实时输入的值 断言成 HTMLInputElement
+      const targetValue = (e.target as HTMLInputElement).value
+      // 把值赋给targetValue
+      inputRef.val = targetValue
+      // !把事件发送出去 事件名称 ，要发送的值targetValue
+      context.emit('update:modelValue', targetValue)
+    }
+    return { validateInput, inputRef, updateValue }
   }
 })
 </script>

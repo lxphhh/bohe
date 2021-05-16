@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-16 15:39:15
+ * @LastEditTime: 2021-05-16 20:35:51
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -14,7 +14,8 @@
       <div class="mb-3">
         <div class="mb-3">
           <label class="form-label">邮箱地址</label>
-          <validate-input :rules="emailRules"></validate-input>
+          <validate-input :rules="emailRules" v-model="emailVal"></validate-input>
+          {{ emailVal }}
         </div>
         <label for="exampleInputEmail1" class="form-label">Email address</label>
         <input
@@ -36,7 +37,7 @@
 
 <script lang="ts">
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
 
 import ColumnList, { ColumnProps } from './components/ColumnList.vue'
 import GlobalHeader, { UserProps } from './components/GlobalHeader.vue'
@@ -103,6 +104,7 @@ export default defineComponent({
     ValidateInput
   },
   setup() {
+    const emailVal = ref('张三')
     // 验证邮箱功能集合
     const emailRules: RulesProp = [
       { type: 'required', message: '电子邮箱地址不能为空' },
@@ -127,7 +129,7 @@ export default defineComponent({
         emailRef.message = 'should be vaild email!'
       }
     }
-    return { list: testData, currentUser, emailRef, validateEmail, emailRules }
+    return { list: testData, currentUser, emailRef, validateEmail, emailRules, emailVal }
   }
 })
 </script>
