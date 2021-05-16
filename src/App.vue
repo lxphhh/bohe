@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-16 11:04:09
+ * @LastEditTime: 2021-05-16 11:21:16
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -17,8 +17,10 @@
           type="email"
           class="form-control"
           id="exampleInputEmail1"
-          aria-describedby="emailHelp"
+          v-model="emailRef.val"
+          @blur="validateEmail"
         />
+        <div class="form-text" v-if="emailRef.error">{{ emailRef.message }}</div>
       </div>
       <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Password</label>
@@ -30,7 +32,7 @@
 
 <script lang="ts">
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { defineComponent } from 'vue'
+import { defineComponent, reactive } from 'vue'
 
 import ColumnList, { ColumnProps } from './components/ColumnList.vue'
 import GlobalHeader, { UserProps } from './components/GlobalHeader.vue'
@@ -84,6 +86,10 @@ const testData: ColumnProps[] = [
       'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100'
   }
 ]
+
+// 好用的邮箱格式正则表达式
+const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+
 export default defineComponent({
   name: 'App',
   components: {
@@ -91,7 +97,26 @@ export default defineComponent({
     GlobalHeader
   },
   setup() {
-    return { list: testData, currentUser }
+    // 要包含当前的值，包含错误，包含信息多对象集合
+    const emailRef = reactive({
+      val: '',
+      error: false, // 没有错误
+      message: '' // 提示语
+    })
+    // 校验规则
+    const validateEmail = () => {
+      // trim()去除空格为空
+      if (emailRef.val.trim() === '') {
+        // 错误
+        emailRef.error = true
+        emailRef.message = 'You can not input anything!'
+        // 如果不满足正则表达式的匹配 test表示字符串是否匹配这个模式
+      } else if (!emailReg.test(emailRef.val)) {
+        emailRef.error = true
+        emailRef.message = 'should be vaild email!'
+      }
+    }
+    return { list: testData, currentUser, emailRef, validateEmail }
   }
 })
 </script>
