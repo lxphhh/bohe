@@ -12,7 +12,7 @@
     class="navbar navbar-dark bs-teal justify-content-between mb-4 px-4"
     style="background-color: #20c997;"
   >
-    <a class="navbar-brand" href="#"><i class="iconfont icon-yezi- fontSize"></i>薄荷专栏</a>
+    <a class="navbar-brand" href="#"><i class="iconfont icon-yezi- fontSize"></i>&nbsp;薄荷专栏</a>
     <ul v-if="!user.isLogin" class="list-inline mb-0">
       <li class="list-inline-item"><a href="#" class="btn btn-outline-light my-2">登陆</a></li>
       <li class="list-inline-item"><a href="#" class="btn btn-outline-light my-2">注册</a></li>

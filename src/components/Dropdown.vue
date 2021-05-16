@@ -18,7 +18,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, onUnmounted } from 'vue'
+import { defineComponent, watch, ref } from 'vue'
+
+import useClickOutside from '../hooks/useClickOutside'
 
 export default defineComponent({
   name: 'Dropdown',
@@ -37,26 +39,14 @@ export default defineComponent({
     const toggleOpen = () => {
       isOpen.value = !isOpen.value
     }
-    // TODO 这个函数要完成的任务是在mounted的时候添加一个点击事件，并且在unMounted的时候消除这个事件
-    // TODO 拿到Dropdown的dom 元素并且进行判断判断是否包含该元素的dom节点用来判断是否关闭这个
-    const handler = (e: MouseEvent) => {
-      if (dropdowmRef.value) {
-        // ?console.log(dropdowmRef.value) // DOM节点拿到了
-        // ?contains表示不包含点击的节点 e。target不一定是html节点 as HTMLElement
-        // 如果该isOpen.value为true,可以直接不写判断，写isOpen.value
-        if (!dropdowmRef.value.contains(e.target as HTMLElement) && isOpen.value) {
-          isOpen.value = false
-        }
+    // 自定义点击关闭下拉框
+    const isClickOutside = useClickOutside(dropdowmRef)
+    //?如果isOpen和isClickOutside的值同时为真的话 代表打开且点到外面去=关
+    // !这段代码只能执行一次,解决方法用watch监听对象isClickOutside的变化
+    watch(isClickOutside, () => {
+      if (isOpen.value && isClickOutside.value) {
+        isOpen.value = false
       }
-      // 两个关闭条件1.是否包含该dom节点，2，isOpen属性是否打开
-    }
-    onMounted(() => {
-      // 监听一个点击事件
-      document.addEventListener('click', handler)
-    })
-    onUnmounted(() => {
-      // 记得删除
-      document.removeEventListener('click', handler)
     })
     return { isOpen, toggleOpen, dropdowmRef }
   }
