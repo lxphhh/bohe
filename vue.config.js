@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2021-04-17 10:46:41
- * @LastEditTime: 2021-05-15 19:40:58
+ * @LastEditTime: 2021-05-17 13:53:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \知乎专栏\zhihu\imooc-zhihu-zheye-column\vue.config.js
+ * @FilePath:vue.config.js
  */
 const path = require('path')
 module.exports = {

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-17 00:26:44
+ * @LastEditTime: 2021-05-17 15:25:19
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -122,8 +122,9 @@ export default defineComponent({
     // 验证密码不能为空
     const passwordRules: RulesProp = [{ type: 'required', message: '密码不能为空' }]
     // 接收到校验的结果
-    const onFormSubmit = (res: boolean) => {
-      console.log('result', inputRef.value.validateInput())
+    const onFormSubmit = (result: boolean) => {
+      // console.log('result', inputRef.value.validateInput())
+      console.log('result', result)
     }
     return {
       list: testData,

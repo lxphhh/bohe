@@ -22,8 +22,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive } from 'vue'
+import { defineComponent, PropType, reactive, onMounted } from 'vue'
 
+import { emitter } from './ValidateForm.vue'
 // 好用的邮箱格式正则表达式 JS当中正则表达式RegExp类型，下面方法test可以匹配模式
 const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
@@ -86,6 +87,10 @@ export default defineComponent({
       // !把事件发送出去 事件名称 ，要发送的值targetValue
       context.emit('update:modelValue', targetValue)
     }
+    // 挂载的时候发送 整个验证函数
+    onMounted(() => {
+      emitter.emit('form-item-created', validateInput)
+    })
     return { validateInput, inputRef, updateValue }
   }
 })
