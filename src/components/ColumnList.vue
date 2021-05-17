@@ -21,7 +21,7 @@
           />
           <h5 class="card-title">{{ column.title }}</h5>
           <p class="card-text text-left">{{ column.description }}</p>
-          <a href="#" class="btn btn-outline-primary">进入薄荷专栏</a>
+          <a href="#" class="btn btn-outline-primary">进入专栏</a>
         </div>
       </div>
     </div>
@@ -50,6 +50,50 @@ export default defineComponent({
   },
   // 重新组合prop里面的数据
   setup(props) {
+    const testData: ColumnProps[] = [
+      {
+        id: 1,
+        title: 'test1的专栏',
+        description: '这是的test1专栏，有一段非常有意思的简介，可以更新一下欧',
+        avatar:
+          'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100'
+      },
+      {
+        id: 1,
+        title: 'test1的专栏',
+        description: '这是的test1专栏，有一段非常有意思的简介，可以更新一下欧',
+        avatar:
+          'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100'
+      },
+      {
+        id: 1,
+        title: 'test1的专栏',
+        description: '这是的test1专栏，有一段非常有意思的简介，可以更新一下欧'
+        // avatar:
+        //   'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100'
+      },
+      {
+        id: 2,
+        title: 'test2的专栏',
+        description: '这是的test2专栏，有一段非常有意思的简介，可以更新一下欧',
+        avatar:
+          'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100'
+      },
+      {
+        id: 2,
+        title: 'test2的专栏',
+        description: '这是的test2专栏，有一段非常有意思的简介，可以更新一下欧',
+        avatar:
+          'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100'
+      },
+      {
+        id: 2,
+        title: 'test2的专栏',
+        description: '这是的test2专栏，有一段非常有意思的简介，可以更新一下欧',
+        avatar:
+          'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100'
+      }
+    ]
     // 重新变成新的数组
     const columnList = computed(() => {
       // *3.1 支持return返回值；
@@ -63,7 +107,7 @@ export default defineComponent({
         return column // 记得返回
       })
     })
-    return { columnList }
+    return { columnList, list: testData }
   }
 })
 </script>
