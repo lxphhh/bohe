@@ -33,7 +33,7 @@ export default defineComponent({
   // 需要点击的时候触发
   emits: ['form-sumbit'],
   setup(props, context) {
-    // 建立一个数组把方法全部存起来
+    // ?建立一个数组把方法全部存起来
     let funcArr: ValidateFunc[] = []
     // TODO 循环调用所有的验证方法返回一个boolean值
     // TODO 一个不通过就都不通过
@@ -44,15 +44,18 @@ export default defineComponent({
       const result = funcArr.map((func) => func()).every((result) => result)
       context.emit('form-sumbit', result)
     }
-    const callback = (func: ValidateFunc) => {
-      funcArr.push(func)
+    const callback = (func?: ValidateFunc) => {
+      // !多加一层判断
+      if (func) {
+        funcArr.push(func)
+      }
     }
-    // 创建事件监听
+    // 创建事件监听器
     emitter.on('form-item-created', callback)
     // !记得卸载事件监听器
     onUnmounted(() => {
       emitter.off('form-item-created', callback)
-      funcArr = [] // 卸载清空
+      funcArr = [] // 卸载清空 不需要这个变量
     })
     return { sumbitForm }
   }

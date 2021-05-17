@@ -12,9 +12,13 @@
     class="navbar navbar-dark bs-teal justify-content-between mb-4 px-4"
     style="background-color: #20c997;"
   >
-    <a class="navbar-brand" href="#"><i class="iconfont icon-yezi- fontStyle"></i>&nbsp;薄荷专栏</a>
+    <router-link to="/" class="navbar-brand" href="#"
+      ><i class="iconfont icon-yezi- fontStyle"></i>&nbsp;薄荷专栏</router-link
+    >
     <ul v-if="!user.isLogin" class="list-inline mb-0">
-      <li class="list-inline-item"><a href="#" class="btn btn-outline-light my-2">登陆</a></li>
+      <li class="list-inline-item">
+        <router-link to="/login" href="#" class="btn btn-outline-light my-2">登陆</router-link>
+      </li>
       <li class="list-inline-item"><a href="#" class="btn btn-outline-light my-2">注册</a></li>
     </ul>
     <!-- 下拉选择框 -->
