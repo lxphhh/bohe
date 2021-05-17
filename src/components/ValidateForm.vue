@@ -44,8 +44,10 @@ export default defineComponent({
       const result = funcArr.map((func) => func()).every((result) => result)
       context.emit('form-sumbit', result)
     }
-    const callback = (func: ValidateFunc) => {
-      funcArr.push(func)
+    const callback = (func?: ValidateFunc) => {
+      if (func) {
+        onUnmounted
+      }
     }
     // 创建事件监听
     emitter.on('form-item-created', callback)
