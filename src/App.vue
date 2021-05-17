@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-17 22:47:41
+ * @LastEditTime: 2021-05-17 22:59:31
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -24,7 +24,7 @@ import PageFooter from './components/PageFooter.vue'
 
 // 测试数据区域
 const currentUser: UserProps = {
-  isLogin: true,
+  isLogin: false,
   name: 'hello 张三！'
 }
 

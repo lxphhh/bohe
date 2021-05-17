@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-17 22:38:50
- * @LastEditors: your name
+ * @LastEditTime: 2021-05-17 22:54:55
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \bohe\src\views\Home.vue
 -->
@@ -12,9 +12,14 @@
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
           <img src="../assets/callout.svg" alt="callout" class="w-50" />
-          <h2 class="font-weight-light">随心写作，自由表达</h2>
+          <h2 class="font-weight-light">谈天说地，分享一切</h2>
           <p>
-            <a href="#" class="btn btn-primary my-2">开始写文章</a>
+            <a
+              href="#"
+              class="btn btn-primary my-2"
+              style="background-color: #20c997;border:1px solid #20c997;"
+              >开始写文章</a
+            >
           </p>
         </div>
       </div>
