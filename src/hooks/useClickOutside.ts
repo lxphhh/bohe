@@ -17,15 +17,16 @@ const useClickOutside = (elementRef: Ref<null | HTMLElement>) => {
   // 确定传入的参数是什么
   // 还需要判断用户是否往外面点击
   const isClickOutside = ref(false) // 没有点到外面去
+
   const handler = (e: MouseEvent) => {
     if (elementRef.value) {
       // *e.target点击事件
       // *如果这个节点包含被点击的部分那么不关闭
       // *如果这个节点不包含就关闭
       if (elementRef.value.contains(e.target as HTMLElement)) {
-        isClickOutside.value = false // close
+        isClickOutside.value = false // open
       } else {
-        isClickOutside.value = true // open
+        isClickOutside.value = true // close
       }
     }
   }

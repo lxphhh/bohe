@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 16:15:13
- * @LastEditTime: 2021-05-17 16:18:10
+ * @LastEditTime: 2021-05-18 09:04:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \bohe\src\components\footer.vue
@@ -24,7 +24,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'Footer'
+  name: 'PageFooter'
 })
 </script>
 

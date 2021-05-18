@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-18 00:23:34
+ * @LastEditTime: 2021-05-18 08:55:25
  * @LastEditors: Please set LastEditors
  * @Description: 登陆部分
  * @FilePath: \bohe\src\views\Login.vue
@@ -56,10 +56,9 @@ export default defineComponent({
     const passwordRules: RulesProp = [{ type: 'required', message: '密码不能为空' }]
 
     const onFormSubmit = (result: boolean) => {
-      debugger
-      console.log('result', result)
+      console.log('result', result) // T or F
       if (result) {
-        // router.push(`/column/${1}`)
+        // *router.push(`/column/${1}`)
         router.push({ name: 'column', params: { id: 1 } })
       }
     }

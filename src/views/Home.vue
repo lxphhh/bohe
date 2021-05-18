@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-17 22:54:55
+ * @LastEditTime: 2021-05-18 09:12:33
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \bohe\src\views\Home.vue
@@ -31,6 +31,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+
 import { testData } from '../testData'
 import ColumnList from '../components/ColumnList.vue'
 export default defineComponent({

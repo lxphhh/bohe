@@ -7,6 +7,7 @@
  * @FilePath: \bohe\src\views\ColumnDetail.vue
 -->
 <template>
+  <!-- 预处理标签 -->
   <pre>{{ route }}</pre>
 </template>
 

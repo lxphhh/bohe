@@ -25,6 +25,7 @@
 import { defineComponent, PropType, reactive, onMounted } from 'vue'
 
 import { emitter } from './ValidateForm.vue'
+
 // 好用的邮箱格式正则表达式 JS当中正则表达式RegExp类型，下面方法test可以匹配模式
 const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 

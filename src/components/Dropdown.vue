@@ -12,7 +12,7 @@
       {{ title }}
     </a>
     <ul class="dropdown-menu" :style="{ display: 'block', textAlign: 'center' }" v-if="isOpen">
-      <!-- 自定义下拉框 -->
+      <!-- 自定义下拉框 slot 默认名字是default 并且只要一个slot的时候不需要名字-->
       <slot></slot>
     </ul>
   </div>
@@ -21,7 +21,7 @@
 <script lang="ts">
 import { defineComponent, watch, ref } from 'vue'
 
-import useClickOutside from '../hooks/useClickOutside'
+import useClickOutside from '../hooks/useClickOutside' // 点击dom元素外关闭该下拉框
 
 export default defineComponent({
   name: 'Dropdown',
@@ -34,7 +34,7 @@ export default defineComponent({
   },
   setup() {
     // ?在setup拿到dom节点的方法ref
-    // ?初始值是null因为当vue还没有挂载的时候 还是不是一个 dom节点 为 null 挂载之后有 HTMLElement
+    // ?初始值是null因为当vue还没有挂载的时候 还是不是一个 dom节点 为 null 挂载之后有 HTMLElement 空且它是一个html元素
     const dropdowmRef = ref<null | HTMLElement>(null)
     const isOpen = ref(false) // 默认关闭
     const toggleOpen = () => {
@@ -45,6 +45,7 @@ export default defineComponent({
     //?如果isOpen和isClickOutside的值同时为真的话 代表打开且点到外面去=关
     // !这段代码只能执行一次,解决方法用watch监听对象isClickOutside的变化
     watch(isClickOutside, () => {
+      // !如果两个为真的话，代表打开且点到外面去了，则关闭这个下拉框
       if (isOpen.value && isClickOutside.value) {
         isOpen.value = false
       }

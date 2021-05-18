@@ -50,9 +50,10 @@ export default defineComponent({
       required: true
     }
   },
-  // 重新组合prop里面的数据
+
   setup(props) {
-    // 重新变成新的数组
+    // TODO重新组合prop里面的数据 ok
+    // TODO重新变成新的数组 ok
     const columnList = computed(() => {
       // *3.1 支持return返回值；
       // *3.2 return是啥，相当于把数组中的这一项变为啥（并不影响原来的数组，只是相当于把原数组克隆一份，把克隆的这一份数组中的对应项改变了）
