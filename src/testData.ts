@@ -30,7 +30,7 @@ export interface PostProps {
 }
 // 测试数据区域
 export const currentUser: UserProps = {
-  isLogin: true,
+  isLogin: false,
   name: 'hello 张三！'
 }
 

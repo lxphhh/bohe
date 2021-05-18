@@ -41,6 +41,7 @@ export interface ColumnProps {
   title: string
   description: string
 }
+
 export default defineComponent({
   name: 'ColumnList',
   // 组件的灵魂props，数据的形式数组

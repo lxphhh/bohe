@@ -1,9 +1,9 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-18 09:12:33
+ * @LastEditTime: 2021-05-18 12:00:28
  * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
+ * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
 -->
 <template>
@@ -30,16 +30,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { useStore } from 'vuex'
 
-import { testData } from '../testData'
+import { GlobalDataProps } from '../store'
 import ColumnList from '../components/ColumnList.vue'
+import { testData } from '@/testData'
 export default defineComponent({
   name: 'Home',
-  components: {
+  componentsx: {
     ColumnList
   },
   setup() {
+    // GlobalDataProps获得类型补全
+    const store = useStore<GlobalDataProps>()
+    // !vuex的数据多从计算属性里面读取
+    const list = computed(() => store.state.columns)
     return {
       list: testData
     }
