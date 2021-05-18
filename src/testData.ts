@@ -25,7 +25,7 @@ export interface PostProps {
   title: string // 标题
   content: string // 内容
   image?: string // 图片
-  createdAt: string // 创建作者
+  createdAt: string // 创建时间
   columnId: number // 为了分页
 }
 // 测试数据区域
