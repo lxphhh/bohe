@@ -24,10 +24,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 
-import { testData, testPosts } from '../testData'
+// import { testData, testPosts } from '../testData'
+import { GlobalDataProps } from '../store'
 import PostList from '../components/PostList.vue'
 
 export default defineComponent({
@@ -36,14 +38,17 @@ export default defineComponent({
     PostList
   },
   setup() {
+    const store = useStore<GlobalDataProps>()
     const route = useRoute()
     // !tips：可以加一个+号就能从字符串变成number类型
     const currentId = +route.params.id // 拿到当前路由id
     // ?返回数组中满足提供的测试函数的第一个元素的值，
     // ?若没有满足测试函数的元素，则返回undefined
     // *这两行的目的就是把，专栏和专栏下的文章关联起来，一个专栏可以对应多篇文章
-    const column = testData.find((c) => c.id === currentId) //c代表数组里面的每一个元素
-    const list = testPosts.filter((post) => post.columnId === currentId) // 过滤出满足条件的
+    // //const column = testData.find((c) => c.id === currentId) //c代表数组里面的每一个元素
+    // //const list = testPosts.filter((post) => post.columnId === currentId) // 过滤出满足条件的
+    const column = computed(() => store.getters.getColumnById(currentId))
+    const list = computed(() => store.getters.getPostsByCid(currentId))
 
     return { column, list }
   }

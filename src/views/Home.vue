@@ -1,13 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-18 14:41:12
+ * @LastEditTime: 2021-05-18 16:32:08
  * @LastEditors: Please set LastEditors
  * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
 -->
 <template>
   <div class="home-page">
+    <!-- <pre>{{ biggerColumnLen }}</pre> -->
     <section class="py-5 text-center container">
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
@@ -46,8 +47,10 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     // !vuex的数据多从计算属性里面读取
     const list = computed(() => store.state.columns)
+    const biggerColumnLen = computed(() => store.getters.biggerColumnLen)
     return {
-      list
+      list,
+      biggerColumnLen
     }
   }
 })
