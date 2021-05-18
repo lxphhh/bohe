@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-18 13:48:24
+ * @LastEditTime: 2021-05-18 14:44:36
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -25,15 +25,18 @@ export interface GlobalDataProps {
 }
 // 支持传入一个泛型
 const store = createStore<GlobalDataProps>({
-  // 状态对象
   state: {
     columns: testData,
     posts: testPosts,
     user: { isLogin: false }
   },
-
-  //?vuex中的mutations非常类似于事件
-  mutations: {}
+  mutations: {
+    login(state) {
+      // 采用新对象替换掉老对象 ...state.user 对象展开运算符
+      state.user = { ...state.user, isLogin: true, name: '张三' }
+    }
+  }
 })
+console.log(store.state)
 
 export default store

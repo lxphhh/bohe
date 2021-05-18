@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-18 09:59:32
+ * @LastEditTime: 2021-05-18 14:16:18
  * @LastEditors: Please set LastEditors
  * @Description: 登陆部分
  * @FilePath: \bohe\src\views\Login.vue
@@ -35,6 +35,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 import ValidateInput, { RulesProp } from '../components/ValidateInput.vue'
 import ValidateForm from '../components/ValidateForm.vue'
@@ -47,6 +48,7 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter()
+    const store = useStore()
     const emailVal = ref('') // 空
     const emailRules: RulesProp = [
       { type: 'required', message: '电子邮箱地址不能为空' },
@@ -56,10 +58,12 @@ export default defineComponent({
     const passwordRules: RulesProp = [{ type: 'required', message: '密码不能为空' }]
 
     const onFormSubmit = (result: boolean) => {
-      console.log('result', result) // T or F
+      // console.log('result', result) // T or F
       if (result) {
         // *router.push(`/column/${1}`) 两种写法
-        router.push({ name: 'column', params: { id: 1 } })
+        // router.push({ name: 'column', params: { id: 1 } })
+        router.push('/')
+        store.commit('login')
       }
     }
     return {

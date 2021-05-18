@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-18 13:54:51
+ * @LastEditTime: 2021-05-18 14:41:12
  * @LastEditors: Please set LastEditors
  * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
@@ -38,7 +38,7 @@ import ColumnList from '../components/ColumnList.vue'
 
 export default defineComponent({
   name: 'Home',
-  componentsx: {
+  components: {
     ColumnList
   },
   setup() {
@@ -47,7 +47,7 @@ export default defineComponent({
     // !vuex的数据多从计算属性里面读取
     const list = computed(() => store.state.columns)
     return {
-      list: list
+      list
     }
   }
 })

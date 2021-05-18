@@ -28,11 +28,6 @@ export interface PostProps {
   createdAt: string // 创建时间
   columnId: number // 为了分页
 }
-// 测试数据区域
-export const currentUser: UserProps = {
-  isLogin: false,
-  name: 'hello 张三！'
-}
 
 export const testData: ColumnProps[] = [
   {
@@ -66,7 +61,6 @@ export const testData: ColumnProps[] = [
   }
 ]
 
-// 文章是由多个数组类型组成的
 export const testPosts: PostProps[] = [
   {
     id: 1,
