@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-18 08:55:25
+ * @LastEditTime: 2021-05-18 09:59:32
  * @LastEditors: Please set LastEditors
  * @Description: 登陆部分
  * @FilePath: \bohe\src\views\Login.vue
@@ -58,7 +58,7 @@ export default defineComponent({
     const onFormSubmit = (result: boolean) => {
       console.log('result', result) // T or F
       if (result) {
-        // *router.push(`/column/${1}`)
+        // *router.push(`/column/${1}`) 两种写法
         router.push({ name: 'column', params: { id: 1 } })
       }
     }
