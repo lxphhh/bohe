@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-18 14:45:05
+ * @LastEditTime: 2021-05-19 23:52:14
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -9,6 +9,7 @@
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
+    <h1 v-if="isLoading">再赚点钱</h1>
     <!-- <column-list :list="list"></column-list> -->
     <!-- 路由占位符 -->
     <router-view></router-view>
@@ -34,8 +35,10 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const currentUser = computed(() => store.state.user)
+    const isLoading = computed(() => store.state.loading)
     return {
-      currentUser
+      currentUser,
+      isLoading
     }
   }
 })

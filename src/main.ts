@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-17 08:50:36
- * @LastEditTime: 2021-05-19 21:45:01
+ * @LastEditTime: 2021-05-19 23:57:07
  * @LastEditors: Please set LastEditors
  * @Description: 导入main.ts
  * @FilePath: \bohe\src\main.ts
@@ -17,6 +17,8 @@ import App from './App.vue'
 axios.defaults.baseURL = 'http://apis.imooc.com/api/'
 // *axios拦截器规则
 axios.interceptors.request.use((config) => {
+  // 1 loading拦截器
+  store.commit('setLoading', true)
   // 对象展开符代表前面的参数都需要
   // *get 请求，添加到 url 中
   config.params = { ...config.params, icode: '36C1A30D1795DB99' }
@@ -31,6 +33,11 @@ axios.interceptors.request.use((config) => {
   return config
 })
 
+// 响应拦截器
+axios.interceptors.response.use((config) => {
+  store.commit('setLoading', false)
+  return config
+})
 // 使用插件方法
 const app = createApp(App)
 app.use(router)
