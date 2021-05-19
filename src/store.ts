@@ -1,14 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-19 17:04:10
+ * @LastEditTime: 2021-05-19 17:56:27
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
  */
 import { createStore } from 'vuex'
 import axios from 'axios'
-import { testData, testPosts } from './testData'
+// import { testPosts } from './testData'
 
 // 用户需要存在的信息
 export interface UserProps {
@@ -28,12 +28,13 @@ export interface ColumnProps {
 
 // 一篇文章所需要的有的信息有
 export interface PostProps {
-  id: number // 唯一id
+  _id: string // 唯一id
   title: string // 标题
-  content: string // 内容
-  image?: string // 图片
+  excerpt?: string // 摘要
+  content?: string // 内容
+  image?: ImageProps // 图片
   createdAt: string // 创建时间
-  columnId: number // 为了分页
+  column: string // 为了分页
 }
 
 // 重新定义图片的类型
@@ -53,7 +54,7 @@ export interface GlobalDataProps {
 const store = createStore<GlobalDataProps>({
   state: {
     columns: [],
-    posts: testPosts,
+    posts: [],
     // user: { isLogin: false }
     user: { isLogin: true, name: 'viking', columnId: 1 }
   },
@@ -67,15 +68,37 @@ const store = createStore<GlobalDataProps>({
     createPost(state, newPost) {
       state.posts.push(newPost)
     },
+    // *获取所有的文章
     fetchColumns(state, rawData) {
       state.columns = rawData.data.list
+    },
+    // *获取对应的文章
+    fetchColumn(state, rawData) {
+      state.columns = [rawData.data] // 里面是一个数组
+    },
+    // *获取专栏对应的文章
+    fetchPosts(state, rawData) {
+      state.posts = rawData.data.list // 对象
     }
   },
   actions: {
+    // 获取所有的文章
     fetchColumns(context) {
       axios.get('/columns').then((resp) => {
         // ?1.向mutation来提交数据
         context.commit('fetchColumns', resp.data)
+      })
+    },
+    fetchColumn({ commit }, cid) {
+      // ?第二个参数就是从页面中传过来的数据
+      axios.get(`/columns/${cid}`).then((resp) => {
+        commit('fetchColumn', resp.data)
+      })
+    },
+    fetchPosts({ commit }, cid) {
+      // ?第二个参数就是从页面中传过来的数据
+      axios.get(`/columns/${cid}/posts`).then((resp) => {
+        commit('fetchPosts', resp.data)
       })
     }
   },
@@ -85,15 +108,15 @@ const store = createStore<GlobalDataProps>({
     // biggerColumnLen(state) {
     //   return state.columns.filter((c) => c._id > 2).length
     // },
-    // // *根据id来寻找文章 返回一个函数
-    // getColumnById: (state) => (id: number) => {
-    //   // ?find就是寻找匹配的项
-    //   return state.columns.find((c) => c._id === id)
-    // },
+    // *根据id来寻找文章 返回一个函数
+    getColumnById: (state) => (id: string) => {
+      // ?find就是寻找匹配的项
+      return state.columns.find((c) => c._id === id)
+    },
     // *根据文章id来寻找下面的文章id
-    getPostsByCid: (state) => (cid: number) => {
+    getPostsByCid: (state) => (cid: string) => {
       // ?数组过滤器返回满足条件的值
-      return state.posts.filter((post) => post.columnId == cid)
+      return state.posts.filter((post) => post.column == cid)
     }
   }
 })

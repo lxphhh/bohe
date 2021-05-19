@@ -12,7 +12,11 @@
   <div class="column-detail-page w-75 mx-auto">
     <div class="column-info row mb-4 border-bottom pb-4 align-items-center" v-if="column">
       <div class="col-3 text-center">
-        <img :src="column.avatar" :alt="column.title" class="rounded-circle border " />
+        <img
+          :src="column.avatar.url ? column.avatar.url : defaultImage.value"
+          :alt="column.title"
+          class="rounded-circle border w-100"
+        />
       </div>
       <div class="col-9">
         <h4>{{ column.title }}</h4>
@@ -24,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 
@@ -40,8 +44,16 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const route = useRoute()
+    const defaultImage = ref(
+      'http://fpoimg.com/100x250?text=Preview&bg_color=cf2020&text_color=67aa5a'
+    )
+    onMounted(() => {
+      store.dispatch('fetchColumn', currentId)
+      store.dispatch('fetchPosts', currentId)
+    })
     // !tips：可以加一个+号就能从字符串变成number类型
-    const currentId = +route.params.id // 拿到当前路由id
+    // !在7-7 的时候我们变成了发送异步请求的时候我们的的id变成了string类型就不要转换的
+    const currentId = route.params.id // 拿到当前路由id
     // ?返回数组中满足提供的测试函数的第一个元素的值，
     // ?若没有满足测试函数的元素，则返回undefined
     // *这两行的目的就是把，专栏和专栏下的文章关联起来，一个专栏可以对应多篇文章
@@ -50,7 +62,7 @@ export default defineComponent({
     const column = computed(() => store.getters.getColumnById(currentId))
     const list = computed(() => store.getters.getPostsByCid(currentId))
 
-    return { column, list }
+    return { column, list, defaultImage }
   }
 })
 </script>
