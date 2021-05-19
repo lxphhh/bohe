@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-18 16:32:08
+ * @LastEditTime: 2021-05-19 16:43:50
  * @LastEditors: Please set LastEditors
  * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
 import { GlobalDataProps } from '../store'
@@ -47,10 +47,12 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     // !vuex的数据多从计算属性里面读取
     const list = computed(() => store.state.columns)
-    const biggerColumnLen = computed(() => store.getters.biggerColumnLen)
+    onMounted(() => {
+      // 异步方法
+      store.dispatch('fetchColumns')
+    })
     return {
-      list,
-      biggerColumnLen
+      list
     }
   }
 })

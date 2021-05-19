@@ -10,18 +10,18 @@
 -->
 <template>
   <div class="row">
-    <div v-for="column in columnList" :key="column.id" class="col-4 mb-4">
+    <div v-for="column in columnList" :key="column._id" class="col-4 mb-4">
       <div class="card h-100 shadow-sm">
         <div class="card-body text-center">
-          <!-- my-3就是添加一份y方向的margin单位是3 -->
+          <!--column.avatar && column.avatar.url 代表当且仅当存在的时候才进行替换 -->
           <img
-            :src="column.avatar"
+            :src="column.avatar && column.avatar.url"
             :alt="column.title"
-            class="rounded-circle border border-light w-25 my-3"
+            class="rounded-circle border border-light my-3"
           />
           <h5 class="card-title">{{ column.title }}</h5>
           <p class="card-text text-left">{{ column.description }}</p>
-          <router-link :to="`/column/${column.id}`" class="btn btn-outline-primary"
+          <router-link :to="`/column/${column._id}`" class="btn btn-outline-primary"
             >进入专栏</router-link
           >
         </div>
@@ -33,14 +33,7 @@
 <script lang="ts">
 // PropType 接受一个泛型返回传入的类型
 import { computed, defineComponent, PropType } from 'vue'
-
-// 定义一个接口来使用这些属性
-export interface ColumnProps {
-  id: number // 数字
-  avatar?: string // 变成可以选择
-  title: string
-  description: string
-}
+import { ColumnProps } from '../store'
 
 export default defineComponent({
   name: 'ColumnList',
@@ -62,7 +55,12 @@ export default defineComponent({
       return props.list.map((column) => {
         // 不存在就使用本地的图片 添加本地图片用require关键字
         if (!column.avatar) {
-          column.avatar = require('@/assets/avatar.jpg') // !从本地拿的时候用require来导入
+          column.avatar = {
+            url: require('@/assets/avatar.jpg') // !从本地拿的时候用require来导入
+          }
+        } else {
+          // 代表存在
+          column.avatar.url = column.avatar.url + '?x-oss-process=image/resize,m_pad,h_50,w_50'
         }
         return column // 记得返回
       })
@@ -72,4 +70,9 @@ export default defineComponent({
 })
 </script>
 
-<style></style>
+<style scoped>
+.card-body img {
+  width: 50px;
+  height: 50px;
+}
+</style>
