@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-17 16:26:07
- * @LastEditTime: 2021-05-19 14:05:25
+ * @LastEditTime: 2021-05-19 15:19:00
  * @LastEditors: Please set LastEditors
  * @Description: 路由页面
    TODO:需要一个功能,路由守卫,当用户没有登录的时候不让用户登录我们的主页面
@@ -50,7 +50,7 @@ const router = createRouter({
 // ?to去那里,from从哪里来,next
 // *next() // 有点像koa的洋葱模型 一层层往下走
 router.beforeEach((to, from, next) => {
-  console.log('to.meta', to.meta)
+  // console.log('to.meta', to.meta)
   // !to.meta.requiredLogin有这个login,同时用户的登录信息没有默认跳转登录页面
   if (to.meta.requiredLogin && !store.state.user.isLogin) {
     // !没有默认跳转登录页面
