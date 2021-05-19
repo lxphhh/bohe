@@ -1,10 +1,11 @@
 /*
  * @Author: your name
  * @Date: 2021-05-17 16:26:07
- * @LastEditTime: 2021-05-19 11:59:04
+ * @LastEditTime: 2021-05-19 14:05:25
  * @LastEditors: Please set LastEditors
  * @Description: 路由页面
    TODO:需要一个功能,路由守卫,当用户没有登录的时候不让用户登录我们的主页面
+   ?采用多个meta当成路由元信息,来判断多种条件的路由信息
  * @FilePath: \bohe\src\router.ts
  */
 import { createRouter, createWebHistory } from 'vue-router'
@@ -28,14 +29,14 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login,
-      // 假如已经登录了
+      // *假如已经登录了
       meta: { requiredAlreadyLogin: true }
     },
     {
       path: '/create',
       name: 'create',
       component: CreatePost,
-      // ?路由元信息
+      // *路由元信息
       meta: { requiredLogin: true }
     },
     {
@@ -54,8 +55,9 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiredLogin && !store.state.user.isLogin) {
     // !没有默认跳转登录页面
     next({ name: 'login' })
+    // !满足to.meta.requiredAlreadyLogin为真,且在vuex当中的登录信息存在
   } else if (to.meta.requiredAlreadyLogin && store.state.user.isLogin) {
-    next('/')
+    next('/') // 主页面
   } else {
     next()
   }

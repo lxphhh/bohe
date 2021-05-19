@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-19 11:59:15
+ * @LastEditTime: 2021-05-19 14:09:08
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -12,7 +12,7 @@ import { testData, testPosts, ColumnProps } from './testData'
 
 // 用户需要存在的信息
 export interface UserProps {
-  isLogin: boolean
+  isLogin: boolean // 是否登录
   id?: string // 这两种类型可以不传，因为有isLogin的存在
   name?: string
   columnId?: number // 作者对应创建的专栏
@@ -30,9 +30,9 @@ export interface PostProps {
 
 // 使用TS规定整个store的类型全局
 export interface GlobalDataProps {
-  columns: ColumnProps[] // Array
-  posts: PostProps[] // Array
-  user: UserProps
+  columns: ColumnProps[] // Array 专栏
+  posts: PostProps[] // Array 专栏
+  user: UserProps // 用户
 }
 // 支持传入一个泛型
 const store = createStore<GlobalDataProps>({
@@ -47,7 +47,7 @@ const store = createStore<GlobalDataProps>({
       // ?采用新对象替换掉老对象 ...state.user 对象展开运算符
       state.user = { ...state.user, isLogin: true, name: '张三' }
     },
-    // 处理新建文章的逻辑
+    // *处理新建文章的逻辑
     createPost(state, newPost) {
       state.posts.push(newPost)
     }
