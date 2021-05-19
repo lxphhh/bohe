@@ -5,11 +5,13 @@
   //TODO 实现规则的校验集合，并且可以校验多种类型的代码，string，email，password，null校验并且支持可拓展性
   //TODO 需要让这个组件实现v-model 功能 :value="inputRef.val" @input="updateValue" 发送出去
   //TODO  v-bind="$attrs" 可以替换之前的类型，就可以支持选择类型了text password
+  //TODO 新增功能支持textarea
  * @FilePath: \bohe\src\components\ValidateInput.vue
 -->
 <template>
   <div class="validate-input-container pb-3">
     <input
+      v-if="tag !== 'textarea'"
       class="form-control"
       :value="inputRef.val"
       :class="{ 'is-invalid': inputRef.error }"
@@ -17,6 +19,16 @@
       @input="updateValue"
       v-bind="$attrs"
     />
+    <!-- 新增功能支持textarea -->
+    <textarea
+      v-else
+      class="form-control"
+      :value="inputRef.val"
+      :class="{ 'is-invalid': inputRef.error }"
+      @blur="validateInput"
+      @input="updateValue"
+      v-bind="$attrs"
+    ></textarea>
     <span v-if="inputRef.error" class="invalid-feedback">{{ inputRef.message }}</span>
   </div>
 </template>
@@ -37,17 +49,25 @@ export interface RuleProp {
 // *声明一个是RuleProps类型的数组 RulesProp
 export type RulesProp = RuleProp[]
 
+// *传入一个字符串的字面量，可以让用户手动添加类型
+export type TagType = 'input' | 'textarea'
+
 export default defineComponent({
   name: 'ValidateInput',
   props: {
     rules: Array as PropType<RulesProp>,
-    modelValue: String // 通过这个属性来支持v-model
+    modelValue: String, // 通过这个属性来支持v-model
+    // 通过这个属性来支持传入多个类型
+    tag: {
+      type: String as PropType<TagType>,
+      default: 'input' // *默认渲染input标签
+    }
   },
   // !禁用Arrts的继承，让这个元素不用传到上个元素的根节点
   inheritAttrs: false,
   setup(props, context) {
     // console.log(context.attrs)
-    // 输入要包含当前的值，包含错误，包含信息多对象集合
+    // *输入要包含当前的值，包含错误，包含信息多对象集合 采用reactive
     const inputRef = reactive({
       val: props.modelValue || '',
       error: false, // 没有错误
@@ -57,7 +77,7 @@ export default defineComponent({
     const validateInput = () => {
       // 先判断传过来的rules有无
       if (props.rules) {
-        // every检查数组是否满足所有条件方法是否通过，通过就是true 一个不通过就是false
+        // ?every检查数组是否满足所有条件方法是否通过，通过就是true 一个不通过就是false
         const allPassed = props.rules.every((rule) => {
           let passed = true // 中间变量一开始通过
           inputRef.message = rule.message

@@ -11,7 +11,11 @@
     <a href="#" class="btn btn-outline-light my-2 dropdown-toggle" @click.prevent="toggleOpen">
       {{ title }}
     </a>
-    <ul class="dropdown-menu" :style="{ display: 'block', textAlign: 'center' }" v-if="isOpen">
+    <ul
+      class="dropdown-menu"
+      :style="{ display: 'block', textAlign: 'left', width: '100px' }"
+      v-if="isOpen"
+    >
       <!-- 自定义下拉框 slot 默认名字是default 并且只要一个slot的时候不需要名字-->
       <slot></slot>
     </ul>
