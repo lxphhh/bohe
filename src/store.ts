@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-19 17:56:27
+ * @LastEditTime: 2021-05-19 21:36:35
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -74,6 +74,8 @@ const store = createStore<GlobalDataProps>({
     },
     // *获取对应的文章
     fetchColumn(state, rawData) {
+      // console.log(rawData)
+      // 问题解决为什么是数组的原因,是因为前面规定了多篇文章是[{}]的形式
       state.columns = [rawData.data] // 里面是一个数组
     },
     // *获取专栏对应的文章
@@ -89,6 +91,7 @@ const store = createStore<GlobalDataProps>({
         context.commit('fetchColumns', resp.data)
       })
     },
+    // *展开运算就是直接把context解构出来 原来的写法在第一个上面
     fetchColumn({ commit }, cid) {
       // ?第二个参数就是从页面中传过来的数据
       axios.get(`/columns/${cid}`).then((resp) => {
@@ -108,7 +111,7 @@ const store = createStore<GlobalDataProps>({
     // biggerColumnLen(state) {
     //   return state.columns.filter((c) => c._id > 2).length
     // },
-    // *根据id来寻找文章 返回一个函数
+    // *根据id来寻找文章 返回一个函数 返回一个箭头函数
     getColumnById: (state) => (id: string) => {
       // ?find就是寻找匹配的项
       return state.columns.find((c) => c._id === id)

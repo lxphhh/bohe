@@ -13,7 +13,7 @@
     <div class="column-info row mb-4 border-bottom pb-4 align-items-center" v-if="column">
       <div class="col-3 text-center">
         <img
-          :src="column.avatar.url ? column.avatar.url : defaultImage.value"
+          :src="column.avatar.url ? column.avatar.url : defaultImage"
           :alt="column.title"
           class="rounded-circle border w-100"
         />
