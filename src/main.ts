@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-17 08:50:36
- * @LastEditTime: 2021-05-19 16:35:55
+ * @LastEditTime: 2021-05-19 21:45:01
  * @LastEditors: Please set LastEditors
  * @Description: 导入main.ts
  * @FilePath: \bohe\src\main.ts
@@ -30,12 +30,20 @@ axios.interceptors.request.use((config) => {
   }
   return config
 })
+
+// 使用插件方法
+const app = createApp(App)
+app.use(router)
+app.use(store)
+app.mount('#app')
+
 // // *axios的get请求
 // axios.get('/columns').then((response) => {
 //   console.log(response.data)
 // })
-const app = createApp(App)
-// 使用插件方法
-app.use(router)
-app.use(store)
-app.mount('#app')
+// async await 更加完美的异步请求方法,可以在async当中书写await方法并且,await方法必须等promise结束以后完成
+// async function hello() {
+//   const greeting = await Promise.resolve('wwwww')
+//   return greeting
+// }
+// hello().then((resp) => console.log(resp))

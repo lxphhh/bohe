@@ -1,12 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-19 21:36:35
+ * @LastEditTime: 2021-05-19 22:25:56
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
  */
-import { createStore } from 'vuex'
+import { createStore, Commit } from 'vuex'
 import axios from 'axios'
 // import { testPosts } from './testData'
 
@@ -50,6 +50,13 @@ export interface GlobalDataProps {
   posts: PostProps[] // Array 专栏
   user: UserProps // 用户
 }
+
+// 方法封装获取 三个参数,url mutationName,commit 有一个在vuex里面的Commit类型
+const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
+  const { data } = await axios.get(url)
+  commit(mutationName, data)
+}
+
 // 支持传入一个泛型
 const store = createStore<GlobalDataProps>({
   state: {
@@ -84,25 +91,25 @@ const store = createStore<GlobalDataProps>({
     }
   },
   actions: {
-    // 获取所有的文章
-    fetchColumns(context) {
-      axios.get('/columns').then((resp) => {
-        // ?1.向mutation来提交数据
-        context.commit('fetchColumns', resp.data)
-      })
+    // *获取所有的文章 修改async await
+    fetchColumns({ commit }) {
+      // const { data } = await axios.get('/columns')
+      // commit('fetchColumns', data)
+      // ?1.向mutation来提交数据
+      getAndCommit('/columns', 'fetchColumns', commit)
     },
     // *展开运算就是直接把context解构出来 原来的写法在第一个上面
     fetchColumn({ commit }, cid) {
+      // const { data } = await axios.get(`/columns/${cid}`)
+      // commit('fetchColumn', data)
       // ?第二个参数就是从页面中传过来的数据
-      axios.get(`/columns/${cid}`).then((resp) => {
-        commit('fetchColumn', resp.data)
-      })
+      getAndCommit(`/columns/${cid}`, 'fetchColumn', commit)
     },
     fetchPosts({ commit }, cid) {
+      // const { data } = await axios.get(`/columns/${cid}/posts`)
+      // commit('fetchPosts', data)
       // ?第二个参数就是从页面中传过来的数据
-      axios.get(`/columns/${cid}/posts`).then((resp) => {
-        commit('fetchPosts', resp.data)
-      })
+      getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit)
     }
   },
   // 当值发生变化才会重新开始计算
