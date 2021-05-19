@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-20 00:25:18
+ * @LastEditTime: 2021-05-20 00:37:59
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -9,7 +9,7 @@
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
-    <loading text="奋力加载中" background="rgba(0, 0, 0, 0.8)"></loading>
+    <loading v-if="isLoading" text="奋力加载中"></loading>
     <!-- <column-list :list="list"></column-list> -->
     <!-- 路由占位符 -->
     <router-view></router-view>
