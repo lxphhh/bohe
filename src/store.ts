@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-20 21:53:06
+ * @LastEditTime: 2021-05-20 23:53:16
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -12,10 +12,11 @@ import axios from 'axios'
 
 // 用户需要存在的信息
 export interface UserProps {
-  isLogin: boolean // 是否登录
-  id?: string // 这两种类型可以不传，因为有isLogin的存在
-  name?: string
-  columnId?: number // 作者对应创建的专栏
+  isLogin: boolean // 是否登录自己加的
+  _id?: string // 这两种类型可以不传，因为有isLogin的存在
+  nickName?: string
+  column?: number // 作者对应创建的专栏
+  email?: string
 }
 
 // 专栏信息接口定义
@@ -53,12 +54,12 @@ export interface GlobalDataProps {
   user: UserProps // 用户
 }
 
-// *方法封装获取 三个参数,url mutationName,commit 有一个在vuex里面的Commit类型
+// *GET方法封装获取 三个参数,url mutationName,commit 有一个在vuex里面的Commit类型
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
   const { data } = await axios.get(url)
   commit(mutationName, data)
 }
-// *方法封装获取 四个参数,url mutationName,commit 有一个在vuex里面的Commit类型 payload data数据
+// *POST方法封装获取 四个参数,url mutationName,commit 有一个在vuex里面的Commit类型 payload data数据
 const postAndCommit = async (url: string, mutationName: string, commit: Commit, payload: any) => {
   const { data } = await axios.post(url, payload)
   commit(mutationName, data)
@@ -68,12 +69,12 @@ const postAndCommit = async (url: string, mutationName: string, commit: Commit, 
 // 支持传入一个泛型
 const store = createStore<GlobalDataProps>({
   state: {
-    token: '',
+    token: localStorage.getItem('token') || '',
     loading: false,
     columns: [],
     posts: [],
     // user: { isLogin: false }
-    user: { isLogin: false, name: 'viking', columnId: 1 }
+    user: { isLogin: false }
   },
   // !因为mutations不支持异步的方法,因为异步方法会破坏vuex当中的单向数据流
   mutations: {
@@ -82,7 +83,11 @@ const store = createStore<GlobalDataProps>({
     //   state.user = { ...state.user, isLogin: true, name: '张三' }
     // },
     login(state, rawData) {
-      state.token = rawData.data.token
+      const { token } = rawData.data
+      state.token = token
+      // TODO:1.初始化localStorage=>APP.vue
+      localStorage.setItem('token', token)
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     },
     // *处理新建文章的逻辑
     createPost(state, newPost) {
@@ -108,8 +113,13 @@ const store = createStore<GlobalDataProps>({
     // 全局加载组件
     setLoading(state, status) {
       state.loading = status //
+    },
+    fetchCurrentUser(state, rawData) {
+      // console.log(rawData)
+      state.user = { isLogin: true, ...rawData.data } // !展开运算符可以添加对象信息
     }
   },
+  // !其实action的本质就是一个Promise当然支持多层Promise嵌套来实现需求
   actions: {
     // *获取所有的文章 修改async await
     fetchColumns({ commit }) {
@@ -131,10 +141,22 @@ const store = createStore<GlobalDataProps>({
       // ?第二个参数就是从页面中传过来的数据
       getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit)
     },
+    // 获取当前哟用户登录信息
+    fetchCurrentUser({ commit }) {
+      getAndCommit('/user/current', 'fetchCurrentUser', commit)
+    },
     // 登录
     login({ commit }, payload) {
-      // return返回出去
+      // !return返回出去 相当于一个promise
       return postAndCommit('/user/login', 'login', commit, payload)
+    },
+    // !组合登录,可以登录并且从登录中获取当前用户
+    loginAndFetch({ dispatch }, loginData) {
+      console.log(dispatch)
+      // 1 登录 2获取当前登录用户
+      return dispatch('login', loginData).then(() => {
+        return dispatch('fetchCurrentUser')
+      })
     }
   },
   // 当值发生变化才会重新开始计算

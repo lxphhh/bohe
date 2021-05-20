@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-20 21:52:42
+ * @LastEditTime: 2021-05-20 23:43:48
  * @LastEditors: Please set LastEditors
  * @Description: 登陆部分
  * @FilePath: \bohe\src\views\Login.vue
@@ -66,10 +66,11 @@ export default defineComponent({
           email: emailVal.value,
           password: passwordVal.value
         }
-        store.dispatch('login', payload).then((data) => {
+        // 组合发送
+        store.dispatch('loginAndFetch', payload).then((data) => {
           console.log(data)
           router.push('/')
-          store.commit('login')
+          // store.commit('login')
         })
       }
     }

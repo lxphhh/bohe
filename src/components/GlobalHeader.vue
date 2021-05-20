@@ -24,7 +24,7 @@
     <!-- 下拉选择框 -->
     <ul v-else class="list-inline mb-0">
       <li class="list-inline-item">
-        <dropdown :title="`你好 ${user.name}!`">
+        <dropdown :title="`你好 ${user.nickName}`">
           <dropdown-item>
             <router-link to="/create" class="dropdown-item">新建文章</router-link>
           </dropdown-item>
@@ -41,13 +41,14 @@ import { defineComponent, PropType } from 'vue'
 
 import Dropdown from './Dropdown.vue'
 import DropdownItem from './DropdownItem.vue'
+import { UserProps } from '../store'
 
-// 用户需要存在的信息
-export interface UserProps {
-  isLogin: boolean
-  id?: string // 这两种类型可以不传，因为有isLogin的存在
-  name?: string
-}
+// // 用户需要存在的信息
+// export interface UserProps {
+//   isLogin: boolean
+//   id?: string // 这两种类型可以不传，因为有isLogin的存在
+//   name?: string
+// }
 
 export default defineComponent({
   name: 'GlobalHeader',
