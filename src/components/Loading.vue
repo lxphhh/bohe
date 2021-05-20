@@ -1,9 +1,9 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-20 00:03:27
- * @LastEditTime: 2021-05-20 00:37:27
+ * @LastEditTime: 2021-05-20 09:14:24
  * @LastEditors: Please set LastEditors
- * @Description: 加载组件
+ * @Description: 加载组件 使用到了传送门组件
  * @FilePath: \bohe\src\components\Loading.vue
 -->
 <template>
@@ -16,7 +16,7 @@
         <div class="spinner-border text-success" role="status">
           <span class="visually-hidden">{{ text || '奋力加载中' }}...</span>
         </div>
-        <p v-if="text" class="text-primary small">{{ text }}...</p>
+        <p v-if="text" class="text-success small">{{ text }}...</p>
       </div>
     </div>
   </teleport>
@@ -29,20 +29,20 @@ export default defineComponent({
   name: 'Loading',
   props: {
     text: {
-      type: String // 自定义字符串
+      type: String // 自定义字符串外部传入
     },
     background: {
-      type: String // 背景
+      type: String // 背景外部传入
     }
   },
   setup() {
-    // 需要在组件挂载之前就创建一个关于back的节点
+    // TODO:需要在组件挂载之前就创建一个关于back的节点<div id="back"></div>
     const node = document.createElement('div')
     node.id = 'back'
-    document.body.appendChild(node) // 向DoM的body添加node id为 back的节点
+    document.body.appendChild(node) // ?向DoM的body添加node id为 back的节点
     // !记得删除节点
     onUnmounted(() => {
-      document.body.removeChild(node)
+      document.body.removeChild(node) //?移除节点的api
     })
   }
 })

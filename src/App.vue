@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-20 00:37:59
+ * @LastEditTime: 2021-05-20 08:47:23
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -9,6 +9,7 @@
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
+    <!-- 通过传送门把这个遮罩层创送到了app这个dom节点下 -->
     <loading v-if="isLoading" text="奋力加载中"></loading>
     <!-- <column-list :list="list"></column-list> -->
     <!-- 路由占位符 -->
