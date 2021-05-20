@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-19 23:49:05
+ * @LastEditTime: 2021-05-20 21:53:06
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -46,32 +46,43 @@ export interface ImageProps {
 
 // 使用TS规定整个store的类型全局
 export interface GlobalDataProps {
+  token: string
   loading: boolean // 是否处于加载的状态
   columns: ColumnProps[] // Array 专栏
   posts: PostProps[] // Array 专栏
   user: UserProps // 用户
 }
 
-// 方法封装获取 三个参数,url mutationName,commit 有一个在vuex里面的Commit类型
+// *方法封装获取 三个参数,url mutationName,commit 有一个在vuex里面的Commit类型
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
   const { data } = await axios.get(url)
   commit(mutationName, data)
+}
+// *方法封装获取 四个参数,url mutationName,commit 有一个在vuex里面的Commit类型 payload data数据
+const postAndCommit = async (url: string, mutationName: string, commit: Commit, payload: any) => {
+  const { data } = await axios.post(url, payload)
+  commit(mutationName, data)
+  return data // !由于是async类型会返回一个promise
 }
 
 // 支持传入一个泛型
 const store = createStore<GlobalDataProps>({
   state: {
+    token: '',
     loading: false,
     columns: [],
     posts: [],
     // user: { isLogin: false }
-    user: { isLogin: true, name: 'viking', columnId: 1 }
+    user: { isLogin: false, name: 'viking', columnId: 1 }
   },
   // !因为mutations不支持异步的方法,因为异步方法会破坏vuex当中的单向数据流
   mutations: {
-    login(state) {
-      // ?采用新对象替换掉老对象 ...state.user 对象展开运算符
-      state.user = { ...state.user, isLogin: true, name: '张三' }
+    // login(state) {
+    //   // ?采用新对象替换掉老对象 ...state.user 对象展开运算符
+    //   state.user = { ...state.user, isLogin: true, name: '张三' }
+    // },
+    login(state, rawData) {
+      state.token = rawData.data.token
     },
     // *处理新建文章的逻辑
     createPost(state, newPost) {
@@ -119,6 +130,11 @@ const store = createStore<GlobalDataProps>({
       // commit('fetchPosts', data)
       // ?第二个参数就是从页面中传过来的数据
       getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit)
+    },
+    // 登录
+    login({ commit }, payload) {
+      // return返回出去
+      return postAndCommit('/user/login', 'login', commit, payload)
     }
   },
   // 当值发生变化才会重新开始计算

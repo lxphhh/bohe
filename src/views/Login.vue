@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-18 14:16:18
+ * @LastEditTime: 2021-05-20 21:52:42
  * @LastEditors: Please set LastEditors
  * @Description: 登陆部分
  * @FilePath: \bohe\src\views\Login.vue
@@ -62,8 +62,15 @@ export default defineComponent({
       if (result) {
         // *router.push(`/column/${1}`) 两种写法
         // router.push({ name: 'column', params: { id: 1 } })
-        router.push('/')
-        store.commit('login')
+        const payload = {
+          email: emailVal.value,
+          password: passwordVal.value
+        }
+        store.dispatch('login', payload).then((data) => {
+          console.log(data)
+          router.push('/')
+          store.commit('login')
+        })
       }
     }
     return {
