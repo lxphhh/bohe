@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-21 00:09:32
+ * @LastEditTime: 2021-05-21 00:13:54
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -38,7 +38,7 @@ export interface PostProps {
   column: string // 为了分页
 }
 
-// 重新定义图片的类型
+// 重新定义图片的类型 图片可以不存在
 export interface ImageProps {
   _id?: string // id
   url?: string // 图片url
