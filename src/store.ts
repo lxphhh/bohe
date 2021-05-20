@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-20 23:53:16
+ * @LastEditTime: 2021-05-21 00:09:32
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -85,7 +85,7 @@ const store = createStore<GlobalDataProps>({
     login(state, rawData) {
       const { token } = rawData.data
       state.token = token
-      // TODO:1.初始化localStorage=>APP.vue
+      // TODO:1.初始化localStorage=> APP.vue 当存在的时候设置头
       localStorage.setItem('token', token)
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     },

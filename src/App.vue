@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-21 00:02:36
+ * @LastEditTime: 2021-05-21 00:10:40
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -41,9 +41,11 @@ export default defineComponent({
     const isLoading = computed(() => store.state.loading)
     const token = computed(() => store.state.token)
     onMounted(() => {
-      // *如果当前用户存在且为真,如果token存在且为真 记得现在的token是ref类型需要加value
+      // *如果当前用户没有登录,和token存在且为真 记得现在的token是ref类型需要加value
       if (!currentUser.value.isLogin && token.value) {
+        // !直接向它添加一个token头
         axios.defaults.headers.common.Authorization = `Bearer ${token.value}`
+        // !获取当前用户并且赋值
         store.dispatch('fetchCurrentUser')
       }
     })
