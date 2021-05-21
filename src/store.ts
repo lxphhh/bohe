@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-21 15:11:43
+ * @LastEditTime: 2021-05-21 15:31:01
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -129,7 +129,7 @@ const store = createStore<GlobalDataProps>({
     setError(state, err: GlobalErrorProps) {
       state.error = err
     },
-    // *全局登出方法
+    // *全局登出方法 拿个状态就行
     loginout(state) {
       state.token = '' //!1,设置token为空
       state.user = { isLogin: false } // !2,此时登录状态设置为false
