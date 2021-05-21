@@ -19,7 +19,9 @@
       <li class="list-inline-item">
         <router-link to="/login" href="#" class="btn btn-outline-light my-2">登陆</router-link>
       </li>
-      <li class="list-inline-item"><a href="#" class="btn btn-outline-light my-2">注册</a></li>
+      <li class="list-inline-item">
+        <router-link to="/signup" class="btn btn-outline-light my-2">注册</router-link>
+      </li>
     </ul>
     <!-- 下拉选择框 -->
     <ul v-else class="list-inline mb-0">
@@ -29,7 +31,9 @@
             <router-link to="/create" class="dropdown-item">新建文章</router-link>
           </dropdown-item>
           <dropdown-item disabled><a href="#" class="dropdown-item">编辑资料</a></dropdown-item>
-          <dropdown-item><a href="#" class="dropdown-item">退出登录</a></dropdown-item>
+          <dropdown-item
+            ><a href="#" class="dropdown-item" @click.prevent="loginout">退出登录</a></dropdown-item
+          >
         </dropdown>
       </li>
     </ul>
@@ -38,10 +42,13 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 import Dropdown from './Dropdown.vue'
 import DropdownItem from './DropdownItem.vue'
-import { UserProps } from '../store'
+import { UserProps, GlobalDataProps } from '../store'
+import createMessage from './CreateMessage'
 
 // // 用户需要存在的信息
 // export interface UserProps {
@@ -62,6 +69,19 @@ export default defineComponent({
       type: Object as PropType<UserProps>,
       required: true // 必传
     }
+  },
+  setup() {
+    const router = useRouter()
+    const store = useStore<GlobalDataProps>()
+    // 退出登录 JWT清除状态
+    const loginout = () => {
+      store.commit('loginout')
+      createMessage('退出登录成功', 'success')
+      setTimeout(() => {
+        router.push('/')
+      })
+    }
+    return { loginout }
   }
 })
 </script>

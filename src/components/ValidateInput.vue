@@ -43,10 +43,11 @@ const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0
 
 // 自定义校验规则集 RuleProp
 export interface RuleProp {
-  type: 'required' | 'email' // 可以拓展
+  type: 'required' | 'email' | 'custom' // 可以拓展 自定义校验规则,是一个函数且返回的是boolean
   message: string
+  validator?: () => boolean
 }
-// *声明一个是RuleProps类型的数组 RulesProp
+// *声明一个是RuleProps类型的数组 RulesProp 多个规则集合
 export type RulesProp = RuleProp[]
 
 // *传入一个字符串的字面量，可以让用户手动添加类型
@@ -88,6 +89,9 @@ export default defineComponent({
               break
             case 'email':
               passed = emailReg.test(inputRef.val) // 匹配正则表达式
+              break
+            case 'custom': // ?自定义校验规则函数
+              passed = rule.validator ? rule.validator() : true // 如果这里面有函数要校验就运行校验函数,没有就是true
               break
             default:
               break

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-21 10:54:48
+ * @LastEditTime: 2021-05-21 15:11:43
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -128,6 +128,14 @@ const store = createStore<GlobalDataProps>({
     // *全局错误加载 =>axios全局拦截器
     setError(state, err: GlobalErrorProps) {
       state.error = err
+    },
+    // *全局登出方法
+    loginout(state) {
+      state.token = '' //!1,设置token为空
+      state.user = { isLogin: false } // !2,此时登录状态设置为false
+      // !3.在本地缓存中删除token
+      localStorage.removeItem('token')
+      delete axios.defaults.headers.common['Authorization'] // !4.删除默认的请求头
     }
   },
 

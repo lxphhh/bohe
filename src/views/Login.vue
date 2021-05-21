@@ -1,13 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-21 13:58:30
+ * @LastEditTime: 2021-05-21 14:41:04
  * @LastEditors: Please set LastEditors
  * @Description: 登陆部分
  * @FilePath: \bohe\src\views\Login.vue
 -->
 <template>
-  <div class="login-page">
+  <div class="login-page mx-auto p-3 w-330">
+    <h5 class="my-4 text-center">登录薄荷</h5>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">邮箱地址</label>
@@ -28,6 +29,9 @@
           v-model="passwordVal"
         />
       </div>
+      <template #submit>
+        <button type="submit" class="btn btn-primary btn-block btn-large center">登录</button>
+      </template>
     </validate-form>
   </div>
 </template>
@@ -93,3 +97,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.w-330 {
+  max-width: 330px;
+}
+</style>
