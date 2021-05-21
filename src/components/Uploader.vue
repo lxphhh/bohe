@@ -43,10 +43,10 @@ export default defineComponent({
         fileInput.value.click()
       }
     }
-    // *上传变化e:
+    // *上传变化e:Event
     const handleFileChange = (e: Event) => {
       // !不能让e.target为null
-      const currentTarget = e.target as HTMLInputElement
+      const currentTarget = e.target as HTMLInputElement // 拿files
       // !里面有值代表已经有选择的文件要上传了
       if (currentTarget.files) {
         console.log(currentTarget.files)
@@ -54,7 +54,7 @@ export default defineComponent({
         // 把对象变成数组
         const files = Array.from(currentTarget.files)
         const formData = new FormData()
-        formData.append('files', files[0])
+        formData.append('files', files[0]) // 只需要数组的第0项就可
         axios
           .post(props.action, formData, {
             // 自定义请求头
@@ -67,14 +67,15 @@ export default defineComponent({
             console.log(resp)
             fileStatus.value = 'success'
           })
-          .catch(() => {
+          .catch((err) => {
             // !错误处理
+            console.log(err)
             fileStatus.value = 'error'
           })
           .finally(() => {
-            // !最后处理以后把value变成
+            // !上传完毕最后处理以后把value变成
             if (fileInput.value) {
-              fileInput.value.value = ''
+              fileInput.value.value = '' // 文本框值为空
             }
           })
       }

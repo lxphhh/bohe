@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-21 11:18:51
- * @LastEditTime: 2021-05-21 13:51:34
+ * @LastEditTime: 2021-05-21 21:00:47
  * @LastEditors: Please set LastEditors
  * @Description: 函数式创建message组件
    TODO 要实现的功能是类似全局的alert发生 alert('111')
@@ -30,7 +30,7 @@ const createMessage = (message: string, type: MessageType, timeout = 2000) => {
   // !超时处理 2000
   setTimeout(() => {
     // !记得卸载组件
-    messageInstance.unmount(mountNode) //mountNode
+    messageInstance.unmount() //mountNode
     document.body.removeChild(mountNode)
   }, timeout)
 }
