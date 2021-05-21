@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-21 15:31:01
+ * @LastEditTime: 2021-05-21 22:04:48
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -59,7 +59,12 @@ export interface GlobalErrorProps {
   status: boolean // 是否出错
   message?: string // 错误信息类型 如果为true就直接没有message
 }
-
+// 全局获得的响应格式 data不确定,但是默认是一个空对象
+export interface ResponseType<T = {}> {
+  code: number
+  message: string
+  data: T //泛型对象
+}
 // *GET方法封装获取 三个参数,url mutationName,commit 有一个在vuex里面的Commit类型
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
   const { data } = await axios.get(url)

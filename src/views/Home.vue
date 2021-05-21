@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-21 17:59:19
+ * @LastEditTime: 2021-05-21 22:11:44
  * @LastEditors: Please set LastEditors
  * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
@@ -10,7 +10,12 @@
   <div class="home-page">
     <!-- <pre>{{ biggerColumnLen }}</pre> -->
     <section class="py-5 text-center container">
-      <uploader action="/upload"></uploader>
+      <uploader
+        action="/upload"
+        :beforeUpload="beforeUpload"
+        @file-uploaded="onFileUploaded"
+        @file-uploaded-error="onFileUploadedError"
+      ></uploader>
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
           <img src="../assets/callout.svg" alt="callout" class="w-50" />
@@ -35,9 +40,10 @@
 import { defineComponent, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
-import { GlobalDataProps } from '../store'
+import { GlobalDataProps, ResponseType, ImageProps } from '../store'
 import ColumnList from '../components/ColumnList.vue'
 import Uploader from '../components/Uploader.vue'
+import createMessage from '../components/CreateMessage'
 
 export default defineComponent({
   name: 'Home',
@@ -50,12 +56,32 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     // !vuex的数据多从计算属性里面读取
     const list = computed(() => store.state.columns)
+    // 上传图片之前的校验
+    const beforeUpload = (file: File) => {
+      const isJPG = file.type === 'image/jpeg'
+      // 没有通过校验
+      if (!isJPG) {
+        createMessage('上传图片只能是JPG格式的!', 'error')
+      }
+      return isJPG // T or F
+    }
+    // 上传图片 返回的数据 返回数据满足格式,图片满足格式
+    const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
+      createMessage(`上传图片ID ${rawData.data._id} 成功!`, 'success')
+    }
+    // 失败
+    const onFileUploadedError = (rawData: ResponseType<ImageProps>) => {
+      createMessage(`上传图片ID ${rawData.data._id} 失败!`, 'error')
+    }
     onMounted(() => {
       // 异步方法
       store.dispatch('fetchColumns')
     })
     return {
-      list
+      list,
+      beforeUpload,
+      onFileUploaded,
+      onFileUploadedError
     }
   }
 })
