@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-21 10:00:05
+ * @LastEditTime: 2021-05-21 10:53:46
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -9,7 +9,7 @@
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
-    <pre>{{ error.message }}</pre>
+    <message type="error" :message="error.message" v-if="error.status"></message>
     <!-- 通过传送门把这个遮罩层创送到了app这个dom节点下 -->
     <loading v-if="isLoading" text="奋力加载中"></loading>
     <!-- <column-list :list="list"></column-list> -->
@@ -28,6 +28,7 @@ import axios from 'axios'
 import GlobalHeader from './components/GlobalHeader.vue'
 import PageFooter from './components/PageFooter.vue'
 import Loading from './components/Loading.vue'
+import Message from './components/Message.vue'
 import { GlobalDataProps } from './store'
 
 export default defineComponent({
@@ -35,7 +36,8 @@ export default defineComponent({
   components: {
     GlobalHeader,
     PageFooter,
-    Loading
+    Loading,
+    Message
   },
   setup() {
     const store = useStore<GlobalDataProps>()

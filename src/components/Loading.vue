@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-20 00:03:27
- * @LastEditTime: 2021-05-20 09:14:24
+ * @LastEditTime: 2021-05-21 10:52:23
  * @LastEditors: Please set LastEditors
  * @Description: 加载组件 使用到了传送门组件
  * @FilePath: \bohe\src\components\Loading.vue
@@ -23,7 +23,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted } from 'vue'
+import { defineComponent } from 'vue'
+
+import useDOMCreate from '@/hooks/useDOMCreate'
 
 export default defineComponent({
   name: 'Loading',
@@ -37,13 +39,14 @@ export default defineComponent({
   },
   setup() {
     // TODO:需要在组件挂载之前就创建一个关于back的节点<div id="back"></div>
-    const node = document.createElement('div')
-    node.id = 'back'
-    document.body.appendChild(node) // ?向DoM的body添加node id为 back的节点
-    // !记得删除节点
-    onUnmounted(() => {
-      document.body.removeChild(node) //?移除节点的api
-    })
+    useDOMCreate('back')
+    // const node = document.createElement('div')
+    // node.id = 'back'
+    // document.body.appendChild(node) // ?向DoM的body添加node id为 back的节点
+    // // !记得删除节点
+    // onUnmounted(() => {
+    //   document.body.removeChild(node) //?移除节点的api
+    // })
   }
 })
 </script>

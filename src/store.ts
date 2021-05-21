@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-21 09:52:27
+ * @LastEditTime: 2021-05-21 10:54:48
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -76,7 +76,7 @@ const postAndCommit = async (url: string, mutationName: string, commit: Commit, 
 const store = createStore<GlobalDataProps>({
   state: {
     token: localStorage.getItem('token') || '',
-    error: { status: true },
+    error: { status: false },
     loading: false,
     columns: [],
     posts: [],
