@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-21 00:13:54
+ * @LastEditTime: 2021-05-21 09:52:27
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -48,10 +48,16 @@ export interface ImageProps {
 // 使用TS规定整个store的类型全局
 export interface GlobalDataProps {
   token: string
+  error: GlobalErrorProps // 错误
   loading: boolean // 是否处于加载的状态
   columns: ColumnProps[] // Array 专栏
   posts: PostProps[] // Array 专栏
   user: UserProps // 用户
+}
+// 全局错误封装一下 对象类型
+export interface GlobalErrorProps {
+  status: boolean // 是否出错
+  message?: string // 错误信息类型 如果为true就直接没有message
 }
 
 // *GET方法封装获取 三个参数,url mutationName,commit 有一个在vuex里面的Commit类型
@@ -70,6 +76,7 @@ const postAndCommit = async (url: string, mutationName: string, commit: Commit, 
 const store = createStore<GlobalDataProps>({
   state: {
     token: localStorage.getItem('token') || '',
+    error: { status: true },
     loading: false,
     columns: [],
     posts: [],
@@ -77,15 +84,14 @@ const store = createStore<GlobalDataProps>({
     user: { isLogin: false }
   },
   // !因为mutations不支持异步的方法,因为异步方法会破坏vuex当中的单向数据流
+  // !由action提交一个方法到mutations里面去处理最后的业务逻辑
   mutations: {
-    // login(state) {
-    //   // ?采用新对象替换掉老对象 ...state.user 对象展开运算符
-    //   state.user = { ...state.user, isLogin: true, name: '张三' }
-    // },
+    // *登录JWT验证 ok
     login(state, rawData) {
       const { token } = rawData.data
       state.token = token
-      // TODO:1.初始化localStorage=> APP.vue 当存在的时候设置头
+      // TODO:1.初始化localStorage=> APP.vue =>
+      // TODO:2.当用户未登录的时候且token可以在localStorage里面的时候设置头(代表以前已经登录过)
       localStorage.setItem('token', token)
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     },
@@ -93,33 +99,39 @@ const store = createStore<GlobalDataProps>({
     createPost(state, newPost) {
       state.posts.push(newPost)
     },
-    // *获取所有的文章
+    // *获取所有的文章 ok
     fetchColumns(state, rawData) {
       const { data } = rawData
       state.columns = data.list
     },
-    // *获取对应的文章
+    // *获取对应的文章 ok
     fetchColumn(state, rawData) {
       // console.log(rawData)
       // 问题解决为什么是数组的原因,是因为前面规定了多篇文章是[{}]的形式
       const { data } = rawData
-      state.columns = [data] // *里面是一个数组
+      state.columns = [data] // *里面是一个数组 由columns决定的
     },
     // *获取专栏对应的文章
     fetchPosts(state, rawData) {
       const { data } = rawData
       state.posts = data.list // 对象
     },
-    // 全局加载组件
-    setLoading(state, status) {
-      state.loading = status //
-    },
+    // *获取当前登录用户
     fetchCurrentUser(state, rawData) {
       // console.log(rawData)
       state.user = { isLogin: true, ...rawData.data } // !展开运算符可以添加对象信息
+    },
+    // *全局加载组件 =>axios全局拦截器
+    setLoading(state, status) {
+      state.loading = status //
+    },
+    // *全局错误加载 =>axios全局拦截器
+    setError(state, err: GlobalErrorProps) {
+      state.error = err
     }
   },
-  // !其实action的本质就是一个Promise当然支持多层Promise嵌套来实现需求
+
+  // !其实action的本质就是一个Promise当然支持多层Promise嵌套来实现需求 解构context方法
   actions: {
     // *获取所有的文章 修改async await
     fetchColumns({ commit }) {
@@ -152,8 +164,8 @@ const store = createStore<GlobalDataProps>({
     },
     // !组合登录,可以登录并且从登录中获取当前用户
     loginAndFetch({ dispatch }, loginData) {
-      console.log(dispatch)
-      // 1 登录 2获取当前登录用户
+      // console.log(dispatch)
+      // TODO:1.登录 2.获取当前登录用户
       return dispatch('login', loginData).then(() => {
         return dispatch('fetchCurrentUser')
       })

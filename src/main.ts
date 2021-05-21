@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-17 08:50:36
- * @LastEditTime: 2021-05-20 08:43:44
+ * @LastEditTime: 2021-05-21 10:01:29
  * @LastEditors: Please set LastEditors
  * @Description: 导入main.ts
  * @FilePath: \bohe\src\main.ts
@@ -27,20 +27,29 @@ axios.interceptors.request.use((config) => {
   if (config.data instanceof FormData) {
     config.data.append('icode', '36C1A30D1795DB99')
   } else {
-    // *普通的 body 对象，添加到 data 中
+    // *普通的 body 对象，添加到 data 中 便捷的添加key-value
     config.data = { ...config.data, icode: '36C1A30D1795DB99' }
   }
-  return config
+  return config // 记得返回
 })
 
-// 响应拦截器
-axios.interceptors.response.use((config) => {
-  setTimeout(() => {
-    // 1 loading拦截器
-    store.commit('setLoading', false)
-  }, 500)
-  return config
-})
+// !响应拦截器 还能里面有错误的方法
+axios.interceptors.response.use(
+  (config) => {
+    setTimeout(() => {
+      // 1 loading拦截器
+      store.commit('setLoading', false)
+    }, 500)
+    return config // 记得返回
+  },
+  (err) => {
+    // console.log(err.response)
+    const { error } = err.response.data
+    store.commit('setError', { status: true, message: error }) //成功
+    store.commit('setLoading', false) // 关闭
+    return Promise.reject(error) // 返回一个错误的回调
+  }
+)
 // 使用插件方法
 const app = createApp(App)
 app.use(router)

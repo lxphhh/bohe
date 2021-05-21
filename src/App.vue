@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-21 00:13:33
+ * @LastEditTime: 2021-05-21 10:00:05
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -9,6 +9,7 @@
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
+    <pre>{{ error.message }}</pre>
     <!-- 通过传送门把这个遮罩层创送到了app这个dom节点下 -->
     <loading v-if="isLoading" text="奋力加载中"></loading>
     <!-- <column-list :list="list"></column-list> -->
@@ -41,6 +42,7 @@ export default defineComponent({
     const currentUser = computed(() => store.state.user)
     const isLoading = computed(() => store.state.loading)
     const token = computed(() => store.state.token)
+    const error = computed(() => store.state.error)
     onMounted(() => {
       // *如果当前用户没有登录,和token存在且为真 记得现在的token是ref类型需要加value
       if (!currentUser.value.isLogin && token.value) {
@@ -52,7 +54,8 @@ export default defineComponent({
     })
     return {
       currentUser,
-      isLoading
+      isLoading,
+      error
     }
   }
 })
