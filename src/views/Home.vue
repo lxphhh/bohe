@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-19 16:43:50
+ * @LastEditTime: 2021-05-21 17:59:19
  * @LastEditors: Please set LastEditors
  * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
@@ -10,6 +10,7 @@
   <div class="home-page">
     <!-- <pre>{{ biggerColumnLen }}</pre> -->
     <section class="py-5 text-center container">
+      <uploader action="/upload"></uploader>
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
           <img src="../assets/callout.svg" alt="callout" class="w-50" />
@@ -36,11 +37,13 @@ import { useStore } from 'vuex'
 
 import { GlobalDataProps } from '../store'
 import ColumnList from '../components/ColumnList.vue'
+import Uploader from '../components/Uploader.vue'
 
 export default defineComponent({
   name: 'Home',
   components: {
-    ColumnList
+    ColumnList,
+    Uploader
   },
   setup() {
     // GlobalDataProps获得类型补全

@@ -61,21 +61,19 @@ export default defineComponent({
     const onFormSubmit = (result: boolean) => {
       if (result) {
         // 拿columnId
-        const { columnId } = store.state.user
+        const { column } = store.state.user
         // *新建文章 模拟
-        if (columnId) {
+        if (column) {
           const newPost: PostProps = {
-            id: new Date().getTime(),
             title: titleVal.value,
             content: contentVal.value,
-            columnId, // 有可能是undefined ,加一层存在判断
-            createdAt: new Date().toLocaleString()
+            column // 有可能是undefined ,加一层存在判断
           }
           // 向vuex提交一个同步的变化
           store.commit('createPost', newPost)
           router.push({
             name: 'column',
-            params: { id: columnId }
+            params: { id: column }
           })
         }
       }
