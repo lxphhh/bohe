@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-21 22:11:44
+ * @LastEditTime: 2021-05-22 00:22:34
  * @LastEditors: Please set LastEditors
  * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
@@ -15,7 +15,11 @@
         :beforeUpload="beforeUpload"
         @file-uploaded="onFileUploaded"
         @file-uploaded-error="onFileUploadedError"
-      ></uploader>
+      >
+        <template #uploaded="dataProps">
+          <img :src="dataProps.uploadedData.data.url" width="500" />
+        </template>
+      </uploader>
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
           <img src="../assets/callout.svg" alt="callout" class="w-50" />
@@ -65,11 +69,11 @@ export default defineComponent({
       }
       return isJPG // T or F
     }
-    // 上传图片 返回的数据 返回数据满足格式,图片满足格式
+    // ?上传图片 返回的数据 返回数据满足格式,图片满足格式ResponseType<ImageProps>
     const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
       createMessage(`上传图片ID ${rawData.data._id} 成功!`, 'success')
     }
-    // 失败
+    // ?失败
     const onFileUploadedError = (rawData: ResponseType<ImageProps>) => {
       createMessage(`上传图片ID ${rawData.data._id} 失败!`, 'error')
     }
