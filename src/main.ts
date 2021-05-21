@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-17 08:50:36
- * @LastEditTime: 2021-05-21 10:58:05
+ * @LastEditTime: 2021-05-21 13:59:20
  * @LastEditors: Please set LastEditors
  * @Description: 导入main.ts
  * @FilePath: \bohe\src\main.ts
@@ -19,6 +19,7 @@ axios.defaults.baseURL = 'http://apis.imooc.com/api/'
 axios.interceptors.request.use((config) => {
   // 1 loading拦截器
   store.commit('setLoading', true)
+  store.commit('setError', { status: false, message: '' }) // 重置一下
   // 对象展开符代表前面的参数都需要
   // *get 请求，添加到 url 中
   config.params = { ...config.params, icode: '36C1A30D1795DB99' }
@@ -39,9 +40,10 @@ axios.interceptors.response.use(
     setTimeout(() => {
       // 1 loading拦截器
       store.commit('setLoading', false)
-    }, 500)
+    }, 200)
     return config // 记得返回
   },
+  // !可以获取错误
   (err) => {
     // console.log(err.response)
     const { error } = err.response.data

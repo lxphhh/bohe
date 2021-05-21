@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-21 10:02:17
+ * @LastEditTime: 2021-05-21 13:58:30
  * @LastEditors: Please set LastEditors
  * @Description: 登陆部分
  * @FilePath: \bohe\src\views\Login.vue
@@ -39,6 +39,7 @@ import { useStore } from 'vuex'
 
 import ValidateInput, { RulesProp } from '../components/ValidateInput.vue'
 import ValidateForm from '../components/ValidateForm.vue'
+import createMessage from '../components/CreateMessage'
 
 export default defineComponent({
   name: 'Login',
@@ -70,8 +71,11 @@ export default defineComponent({
         store
           .dispatch('loginAndFetch', payload)
           .then((data) => {
-            console.log(data)
-            router.push('/')
+            // console.log(data)
+            createMessage('登录成功 2秒以后跳转首页', 'success')
+            setTimeout(() => {
+              router.push('/')
+            }, 2000)
             // store.commit('login')
           })
           .catch((error) => {
