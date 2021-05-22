@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-21 22:04:48
+ * @LastEditTime: 2021-05-22 10:51:49
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -69,6 +69,7 @@ export interface ResponseType<T = {}> {
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
   const { data } = await axios.get(url)
   commit(mutationName, data)
+  return data // 返回一个Promise
 }
 // *POST方法封装获取 四个参数,url mutationName,commit 有一个在vuex里面的Commit类型 payload data数据
 const postAndCommit = async (url: string, mutationName: string, commit: Commit, payload: any) => {
@@ -151,24 +152,24 @@ const store = createStore<GlobalDataProps>({
       // const { data } = await axios.get('/columns')
       // commit('fetchColumns', data)
       // ?1.向mutation来提交数据
-      getAndCommit('/columns', 'fetchColumns', commit)
+      return getAndCommit('/columns', 'fetchColumns', commit)
     },
     // *展开运算就是直接把context解构出来 原来的写法在第一个上面
     fetchColumn({ commit }, cid) {
       // const { data } = await axios.get(`/columns/${cid}`)
       // commit('fetchColumn', data)
       // ?第二个参数就是从页面中传过来的数据
-      getAndCommit(`/columns/${cid}`, 'fetchColumn', commit)
+      return getAndCommit(`/columns/${cid}`, 'fetchColumn', commit)
     },
     fetchPosts({ commit }, cid) {
       // const { data } = await axios.get(`/columns/${cid}/posts`)
       // commit('fetchPosts', data)
       // ?第二个参数就是从页面中传过来的数据
-      getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit)
+      return getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit)
     },
     // 获取当前哟用户登录信息
     fetchCurrentUser({ commit }) {
-      getAndCommit('/user/current', 'fetchCurrentUser', commit)
+      return getAndCommit('/user/current', 'fetchCurrentUser', commit)
     },
     // 登录
     login({ commit }, payload) {

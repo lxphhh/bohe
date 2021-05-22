@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-22 00:22:34
+ * @LastEditTime: 2021-05-22 10:03:17
  * @LastEditors: Please set LastEditors
  * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
@@ -10,20 +10,20 @@
   <div class="home-page">
     <!-- <pre>{{ biggerColumnLen }}</pre> -->
     <section class="py-5 text-center container">
-      <uploader
-        action="/upload"
-        :beforeUpload="beforeUpload"
-        @file-uploaded="onFileUploaded"
-        @file-uploaded-error="onFileUploadedError"
-      >
-        <template #uploaded="dataProps">
-          <img :src="dataProps.uploadedData.data.url" width="500" />
-        </template>
-      </uploader>
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
           <img src="../assets/callout.svg" alt="callout" class="w-50" />
           <h2 class="font-weight-light">谈天说地，分享一切</h2>
+          <uploader
+            action="/upload"
+            :beforeUpload="beforeUpload"
+            @file-uploaded="onFileUploaded"
+            @file-uploaded-error="onFileUploadedError"
+          >
+            <template #uploaded="dataProps">
+              <img :src="dataProps.uploadedData.data.url" width="500" />
+            </template>
+          </uploader>
           <p>
             <a
               href="#"
@@ -70,6 +70,7 @@ export default defineComponent({
       return isJPG // T or F
     }
     // ?上传图片 返回的数据 返回数据满足格式,图片满足格式ResponseType<ImageProps>
+    // ?主要还是获得响应里面的图片信息 所以图片信息要当泛型传进去
     const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
       createMessage(`上传图片ID ${rawData.data._id} 成功!`, 'success')
     }
@@ -79,7 +80,7 @@ export default defineComponent({
     }
     onMounted(() => {
       // 异步方法
-      store.dispatch('fetchColumns')
+      store.dispatch('fetchColumns') // 获取文章
     })
     return {
       list,

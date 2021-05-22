@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-21 13:53:54
+ * @LastEditTime: 2021-05-22 10:49:46
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -44,17 +44,17 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const currentUser = computed(() => store.state.user) // 当前用户
     const isLoading = computed(() => store.state.loading) // 是否加载
-    const token = computed(() => store.state.token) // token
+    // const token = computed(() => store.state.token) // token
     const error = computed(() => store.state.error) // error
-    onMounted(() => {
-      // *如果当前用户没有登录,和token存在且为真 记得现在的token是ref类型需要加value
-      if (!currentUser.value.isLogin && token.value) {
-        // !直接向它添加一个token头
-        axios.defaults.headers.common.Authorization = `Bearer ${token.value}`
-        // !获取当前用户并且赋值
-        store.dispatch('fetchCurrentUser')
-      }
-    })
+    // onMounted(() => {
+    //   // *如果当前用户没有登录,和token存在且为真 记得现在的token是ref类型需要加value
+    //   if (!currentUser.value.isLogin && token.value) {
+    //     // !直接向它添加一个token头
+    //     axios.defaults.headers.common.Authorization = `Bearer ${token.value}`
+    //     // !获取当前用户并且赋值
+    //     store.dispatch('fetchCurrentUser')
+    //   }
+    // })
     // !需要监听error的变化 error中某个值发生变化的时候就显示
     watch(
       () => error.value.status,
