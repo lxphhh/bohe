@@ -10,8 +10,8 @@
     <uploader
       action="/upload"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
-      :beforeUpload="beforeUpload"
-      @file-uploaded="onFileUploaded"
+      :beforeUpload="uploadCheck"
+      @file-uploaded="handleFileUploaded"
       @file-uploaded-error="onFileUploadedError"
     >
       <h3>点击上传文章图片</h3>
@@ -66,6 +66,7 @@ import ValidateInput, { RulesProp } from '../components/ValidateInput.vue'
 import ValidateForm from '../components/ValidateForm.vue'
 import Uploader from '../components/Uploader.vue'
 import createMessage from '../components/CreateMessage'
+import { beforeUploadCheck } from '../helper'
 
 export default defineComponent({
   name: 'Login',
@@ -78,42 +79,66 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const router = useRouter()
     const titleVal = ref('')
+    let imageId = '' // *图片的id
     const titleRules: RulesProp = [{ type: 'required', message: '文章标题不能为空' }]
     const contentVal = ref('')
     const contentRules: RulesProp = [{ type: 'required', message: '文章详情不能为空' }]
     const onFormSubmit = (result: boolean) => {
       if (result) {
         // 拿columnId
-        const { column } = store.state.user
-        // *新建文章 模拟
+        const { column, _id } = store.state.user
+        // *新建文章 模拟 有可能是undefined ,加一层存在判断
         if (column) {
           const newPost: PostProps = {
             title: titleVal.value,
             content: contentVal.value,
-            column // 有可能是undefined ,加一层存在判断
+            column, //
+            author: _id // 传作者id
+          }
+          if (imageId) {
+            newPost.image = imageId
           }
           // 向vuex提交一个同步的变化
-          store.commit('createPost', newPost)
-          router.push({
-            name: 'column',
-            params: { id: column }
+          store.dispatch('createPost', newPost).then(() => {
+            createMessage('发表成功,2s 后跳转到文章!', 'success', 2000)
+            setTimeout(() => {
+              router.push({
+                name: 'column',
+                params: { id: column }
+              })
+            }, 2000)
           })
         }
       }
     }
-    // 上传图片之前的校验
-    const beforeUpload = (file: File) => {
-      const isJPG = file.type === 'image/png' || 'image/jpeg'
-      // 没有通过校验
-      if (!isJPG) {
-        createMessage('上传图片只能是JPG格式的!', 'error')
+    // 上传图片校验方法
+    const uploadCheck = (file: File) => {
+      const result = beforeUploadCheck(file, { format: ['image/png', 'image/jpeg'], size: 1 })
+      const { passed, err } = result
+      if (err === 'format') {
+        createMessage('上传图片只能是JPG或者PNG格式的!', 'error')
       }
-      return isJPG // T or F
+      if (err === 'size') {
+        createMessage('上传图片大小不超过 1MB!', 'error')
+      }
+      return passed
     }
+    // // 上传图片之前的校验
+    // const beforeUpload = (file: File) => {
+    //   const isJPG = file.type === 'image/png' || 'image/jpeg'
+    //   // 没有通过校验
+    //   if (!isJPG) {
+    //     createMessage('上传图片只能是JPG格式的!', 'error')
+    //   }
+    //   return isJPG // T or F
+    // }
     // ?上传图片 返回的数据 返回数据满足格式,图片满足格式ResponseType<ImageProps>
     // ?主要还是获得响应里面的图片信息 所以图片信息要当泛型传进去
-    const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
-      createMessage(`上传图片ID ${rawData.data._id} 成功!`, 'success')
+    const handleFileUploaded = (rawData: ResponseType<ImageProps>) => {
+      if (rawData.data._id) {
+        imageId = rawData.data._id
+        createMessage(`上传图片ID ${rawData.data._id} 成功!`, 'success')
+      }
     }
     // ?失败
     const onFileUploadedError = (rawData: ResponseType<ImageProps>) => {
@@ -125,9 +150,10 @@ export default defineComponent({
       contentVal,
       contentRules,
       onFormSubmit,
-      beforeUpload,
-      onFileUploaded,
-      onFileUploadedError
+      handleFileUploaded,
+      uploadCheck,
+      onFileUploadedError,
+      imageId
     }
   }
 })

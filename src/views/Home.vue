@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-22 13:56:40
+ * @LastEditTime: 2021-05-22 14:28:09
  * @LastEditors: Please set LastEditors
  * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
@@ -35,7 +35,7 @@
 import { defineComponent, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
-import { GlobalDataProps, ResponseType, ImageProps } from '../store'
+import { GlobalDataProps } from '../store'
 import ColumnList from '../components/ColumnList.vue'
 
 export default defineComponent({

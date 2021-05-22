@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-22 10:51:49
+ * @LastEditTime: 2021-05-22 16:02:43
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -29,13 +29,14 @@ export interface ColumnProps {
 
 // 一篇文章所需要的有的信息有
 export interface PostProps {
-  _id: string // 唯一id
+  _id?: string // 唯一id
   title: string // 标题
   excerpt?: string // 摘要
   content?: string // 内容
-  image?: ImageProps // 图片
-  createdAt: string // 创建时间
-  column: string // 为了分页
+  image?: ImageProps | string // 图片
+  createdAt?: string // 创建时间
+  column: string | number // 为了分页
+  author?: string //作者
 }
 
 // 重新定义图片的类型 图片可以不存在
@@ -43,6 +44,7 @@ export interface ImageProps {
   _id?: string // id
   url?: string // 图片url
   createdAt?: string // 创建时间
+  fitUrl?: string // 是否使用占位图片
 }
 
 // 使用TS规定整个store的类型全局
@@ -175,6 +177,10 @@ const store = createStore<GlobalDataProps>({
     login({ commit }, payload) {
       // !return返回出去 相当于一个promise
       return postAndCommit('/user/login', 'login', commit, payload)
+    },
+    createPost({ commit }, payload) {
+      // !return返回出去 相当于一个promise
+      return postAndCommit('/posts', 'createPost', commit, payload)
     },
     // !组合登录,可以登录并且从登录中获取当前用户
     loginAndFetch({ dispatch }, loginData) {

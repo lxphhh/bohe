@@ -34,6 +34,7 @@
 // PropType 接受一个泛型返回传入的类型
 import { computed, defineComponent, PropType } from 'vue'
 import { ColumnProps } from '../store'
+import { generateFitUrl } from '../helper'
 
 export default defineComponent({
   name: 'ColumnList',
@@ -54,14 +55,15 @@ export default defineComponent({
       // *3.3 map只能对元素进行加工处理，产生一个新的数组对象。而不能用它来进行筛选（筛选用filter），为什么不能，看个例子就知道了：
       return props.list.map((column) => {
         // 不存在就使用本地的图片 添加本地图片用require关键字
-        if (!column.avatar) {
-          column.avatar = {
-            url: require('@/assets/avatar.jpg') // !从本地拿的时候用require来导入
-          }
-        } else {
-          // 代表存在
-          column.avatar.url = column.avatar.url + '?x-oss-process=image/resize,m_pad,h_50,w_50'
-        }
+        // if (!column.avatar) {
+        //   column.avatar = {
+        //     url: require('@/assets/avatar.jpg') // !从本地拿的时候用require来导入
+        //   }
+        // } else {
+        //   // 代表存在
+        //   column.avatar.url = column.avatar.url + '?x-oss-process=image/resize,m_pad,h_50,w_50'
+        // }
+        generateFitUrl(column, 50, 50)
         return column // 记得返回
       })
     })

@@ -13,7 +13,7 @@
     <div class="column-info row mb-4 border-bottom pb-4 align-items-center" v-if="column">
       <div class="col-3 text-center">
         <img
-          :src="column.avatar.url ? column.avatar.url : defaultImage"
+          :src="column.avatar.url ? column.avatar.url : column.avatar.fitUrl"
           :alt="column.title"
           class="rounded-circle border w-100"
         />
@@ -33,8 +33,9 @@ import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 
 // import { testData, testPosts } from '../testData'
-import { GlobalDataProps } from '../store'
+import { GlobalDataProps, ColumnProps } from '../store'
 import PostList from '../components/PostList.vue'
+import { generateFitUrl } from '../helper'
 
 export default defineComponent({
   name: 'ColumnDetail',
@@ -59,7 +60,13 @@ export default defineComponent({
     // *这两行的目的就是把，专栏和专栏下的文章关联起来，一个专栏可以对应多篇文章
     // //const column = testData.find((c) => c.id === currentId) //c代表数组里面的每一个元素
     // //const list = testPosts.filter((post) => post.columnId === currentId) // 过滤出满足条件的
-    const column = computed(() => store.getters.getColumnById(currentId))
+    const column = computed(() => {
+      const selectColumn = store.getters.getColumnById(currentId) as ColumnProps | undefined
+      if (selectColumn) {
+        generateFitUrl(selectColumn, 100, 100)
+      }
+      return selectColumn
+    })
     const list = computed(() => store.getters.getPostsByCid(currentId))
 
     return { column, list, defaultImage }
