@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-15 14:28:05
- * @LastEditTime: 2021-05-22 10:49:46
+ * @LastEditTime: 2021-05-22 11:49:03
  * @LastEditors: Please set LastEditors
  * @Description: 主文件入口
  * @FilePath: \Bohe\bohe\src\App.vue
@@ -23,7 +23,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { computed, defineComponent, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
-import axios from 'axios'
 
 import GlobalHeader from './components/GlobalHeader.vue'
 import PageFooter from './components/PageFooter.vue'

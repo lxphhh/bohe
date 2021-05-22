@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-17 16:26:07
- * @LastEditTime: 2021-05-22 11:42:46
+ * @LastEditTime: 2021-05-22 11:47:31
  * @LastEditors: Please set LastEditors
  * @Description: 路由页面
    TODO:需要一个功能,路由守卫,当用户没有登录的时候不让用户登录我们的主页面
@@ -31,7 +31,7 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login,
-      // *假如已经登录了
+      // *假如已经登录了 判断是否需要这个状态
       meta: { requiredAlreadyLogin: true }
     },
     {

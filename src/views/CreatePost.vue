@@ -7,6 +7,26 @@
 <template>
   <div class="create-post-page">
     <h4>新建文章</h4>
+    <uploader
+      action="/upload"
+      class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
+      :beforeUpload="beforeUpload"
+      @file-uploaded="onFileUploaded"
+      @file-uploaded-error="onFileUploadedError"
+    >
+      <h3>点击上传文章图片</h3>
+      <template #loading>
+        <div class="d-flex">
+          <div class="spinner-border text-secondary" role="status">
+            <span class="sr-only"></span>
+          </div>
+          <h3>正在上传中</h3>
+        </div>
+      </template>
+      <template #uploaded="dataProps">
+        <img :src="dataProps.uploadedData.data.url" width="500" />
+      </template>
+    </uploader>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题：</label>
@@ -41,15 +61,18 @@ import { defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
-import { GlobalDataProps, PostProps } from '../store'
+import { GlobalDataProps, PostProps, ResponseType, ImageProps } from '../store'
 import ValidateInput, { RulesProp } from '../components/ValidateInput.vue'
 import ValidateForm from '../components/ValidateForm.vue'
+import Uploader from '../components/Uploader.vue'
+import createMessage from '../components/CreateMessage'
 
 export default defineComponent({
   name: 'Login',
   components: {
     ValidateInput,
-    ValidateForm
+    ValidateForm,
+    Uploader
   },
   setup() {
     const store = useStore<GlobalDataProps>()
@@ -78,13 +101,50 @@ export default defineComponent({
         }
       }
     }
+    // 上传图片之前的校验
+    const beforeUpload = (file: File) => {
+      const isJPG = file.type === 'image/png' || 'image/jpeg'
+      // 没有通过校验
+      if (!isJPG) {
+        createMessage('上传图片只能是JPG格式的!', 'error')
+      }
+      return isJPG // T or F
+    }
+    // ?上传图片 返回的数据 返回数据满足格式,图片满足格式ResponseType<ImageProps>
+    // ?主要还是获得响应里面的图片信息 所以图片信息要当泛型传进去
+    const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
+      createMessage(`上传图片ID ${rawData.data._id} 成功!`, 'success')
+    }
+    // ?失败
+    const onFileUploadedError = (rawData: ResponseType<ImageProps>) => {
+      createMessage(`上传图片ID ${rawData.data._id} 失败!`, 'error')
+    }
     return {
       titleRules,
       titleVal,
       contentVal,
       contentRules,
-      onFormSubmit
+      onFormSubmit,
+      beforeUpload,
+      onFileUploaded,
+      onFileUploadedError
     }
   }
 })
 </script>
+
+<style>
+.create-post-page .file-upload-container {
+  height: 200px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.create-post-page .file-upload-container img {
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  padding: 7px;
+  /* 高度一致 */
+  object-fit: cover;
+}
+</style>

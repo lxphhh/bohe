@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-22 10:03:17
+ * @LastEditTime: 2021-05-22 13:56:40
  * @LastEditors: Please set LastEditors
  * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
@@ -14,16 +14,7 @@
         <div class="col-lg-6 col-md-8 mx-auto">
           <img src="../assets/callout.svg" alt="callout" class="w-50" />
           <h2 class="font-weight-light">谈天说地，分享一切</h2>
-          <uploader
-            action="/upload"
-            :beforeUpload="beforeUpload"
-            @file-uploaded="onFileUploaded"
-            @file-uploaded-error="onFileUploadedError"
-          >
-            <template #uploaded="dataProps">
-              <img :src="dataProps.uploadedData.data.url" width="500" />
-            </template>
-          </uploader>
+
           <p>
             <a
               href="#"
@@ -46,47 +37,24 @@ import { useStore } from 'vuex'
 
 import { GlobalDataProps, ResponseType, ImageProps } from '../store'
 import ColumnList from '../components/ColumnList.vue'
-import Uploader from '../components/Uploader.vue'
-import createMessage from '../components/CreateMessage'
 
 export default defineComponent({
   name: 'Home',
   components: {
-    ColumnList,
-    Uploader
+    ColumnList
   },
   setup() {
     // GlobalDataProps获得类型补全
     const store = useStore<GlobalDataProps>()
     // !vuex的数据多从计算属性里面读取
     const list = computed(() => store.state.columns)
-    // 上传图片之前的校验
-    const beforeUpload = (file: File) => {
-      const isJPG = file.type === 'image/jpeg'
-      // 没有通过校验
-      if (!isJPG) {
-        createMessage('上传图片只能是JPG格式的!', 'error')
-      }
-      return isJPG // T or F
-    }
-    // ?上传图片 返回的数据 返回数据满足格式,图片满足格式ResponseType<ImageProps>
-    // ?主要还是获得响应里面的图片信息 所以图片信息要当泛型传进去
-    const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
-      createMessage(`上传图片ID ${rawData.data._id} 成功!`, 'success')
-    }
-    // ?失败
-    const onFileUploadedError = (rawData: ResponseType<ImageProps>) => {
-      createMessage(`上传图片ID ${rawData.data._id} 失败!`, 'error')
-    }
+
     onMounted(() => {
       // 异步方法
       store.dispatch('fetchColumns') // 获取文章
     })
     return {
-      list,
-      beforeUpload,
-      onFileUploaded,
-      onFileUploadedError
+      list
     }
   }
 })
