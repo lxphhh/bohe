@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-17 16:26:07
- * @LastEditTime: 2021-05-22 11:47:31
+ * @LastEditTime: 2021-05-22 23:54:56
  * @LastEditors: Please set LastEditors
  * @Description: 路由页面
    TODO:需要一个功能,路由守卫,当用户没有登录的时候不让用户登录我们的主页面
@@ -17,6 +17,7 @@ import Login from './views/Login.vue'
 import ColumnDetail from './views/ColumnDetail.vue'
 import CreatePost from './views/CreatePost.vue'
 import Signup from './views/Signup.vue'
+import PostDetail from './views/PostDetail.vue'
 import store from './store'
 
 const router = createRouter({
@@ -52,6 +53,11 @@ const router = createRouter({
       component: Signup,
       // *假如已经登录了
       meta: { redirectAlreadyLogin: true }
+    },
+    {
+      path: '/postdetail/:id', // id
+      name: 'postdetail',
+      component: PostDetail
     }
   ]
 })

@@ -63,7 +63,7 @@ export default defineComponent({
     const column = computed(() => {
       const selectColumn = store.getters.getColumnById(currentId) as ColumnProps | undefined
       if (selectColumn) {
-        generateFitUrl(selectColumn, 100, 100)
+        generateFitUrl(selectColumn, 80, 80)
       }
       return selectColumn
     })

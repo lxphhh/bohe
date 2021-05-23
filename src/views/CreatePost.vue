@@ -18,13 +18,16 @@
       <template #loading>
         <div class="d-flex">
           <div class="spinner-border text-secondary" role="status">
-            <span class="sr-only"></span>
+            <span class="sr-only ml-10"></span>
           </div>
           <h3>正在上传中</h3>
         </div>
       </template>
       <template #uploaded="dataProps">
         <img :src="dataProps.uploadedData.data.url" width="500" />
+      </template>
+      <template #error>
+        <h3>上传图片失败请重新选择一张图<span>>>></span></h3>
       </template>
     </uploader>
     <validate-form @form-submit="onFormSubmit">
@@ -113,6 +116,7 @@ export default defineComponent({
     }
     // 上传图片校验方法
     const uploadCheck = (file: File) => {
+      debugger
       const result = beforeUploadCheck(file, { format: ['image/png', 'image/jpeg'], size: 1 })
       const { passed, err } = result
       if (err === 'format') {

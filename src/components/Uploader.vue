@@ -15,9 +15,13 @@
       <slot v-else-if="fileStatus === 'success'" name="uploaded" :uploadedData="uploadedData">
         <button class="btn btn-primary">上传成功</button>
       </slot>
+      <slot v-else-if="fileStatus === 'error'" name="error">
+        <button class="btn btn-primary" disabled>上传失败请重新选择一张图</button>
+      </slot>
       <slot v-else name="default">
         <button class="btn btn-primary">点击上传</button>
       </slot>
+
       <!-- <span>点击上传</span> -->
     </div>
     <input type="file" class="file-input d-none" ref="fileInput" @change="handleFileChange" />
@@ -72,7 +76,7 @@ export default defineComponent({
         if (props.beforeUpload) {
           const result = props.beforeUpload(files[0]) // 只能上传一项
           if (!result) {
-            return // 校验不通过
+            return // !校验不通过
           }
         }
         fileStatus.value = 'loading'
@@ -95,8 +99,8 @@ export default defineComponent({
           .catch((err) => {
             // !错误处理
             // console.log(err)
-            context.emit('file-uploaded-error', err)
             fileStatus.value = 'error'
+            context.emit('file-uploaded-error', err)
           })
           .finally(() => {
             // !上传完毕最后处理以后把value变成
