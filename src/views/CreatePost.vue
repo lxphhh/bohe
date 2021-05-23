@@ -6,9 +6,10 @@
 -->
 <template>
   <div class="create-post-page">
-    <h4>新建文章</h4>
+    <h4>{{ isEditMode ? '编辑文章' : '新建文章' }}</h4>
     <uploader
       action="/upload"
+      :uploaded="uploadedData"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
       :beforeUpload="uploadCheck"
       @file-uploaded="handleFileUploaded"
@@ -30,6 +31,7 @@
         <h3>上传图片失败请重新选择一张图<span>>>></span></h3>
       </template>
     </uploader>
+    <!-- <h1>{{ titleVal }}</h1> -->
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题：</label>
@@ -53,16 +55,18 @@
         />
       </div>
       <template #submit>
-        <button class="btn btn-primary btn-large">创建</button>
+        <button class="btn btn-primary btn-large">
+          {{ isEditMode ? '更新文章' : '发布文章' }}
+        </button>
       </template>
     </validate-form>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 import { GlobalDataProps, PostProps, ResponseType, ImageProps } from '../store'
 import ValidateInput, { RulesProp } from '../components/ValidateInput.vue'
@@ -81,6 +85,11 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const router = useRouter()
+    const route = useRoute()
+    // console.log(route.query.id)
+    // const isEditMode = typeof route.query.id === 'boolean' // !保护该类型为boolean类型,或者两个!!
+    const uploadedData = ref() // !上传过的图像
+    const isEditMode = !!route.query.id // !保护该类型为boolean类型,或者两个!!
     const titleVal = ref('')
     let imageId = '' // *图片的id
     const titleRules: RulesProp = [{ type: 'required', message: '文章标题不能为空' }]
@@ -90,7 +99,7 @@ export default defineComponent({
       if (result) {
         // 拿columnId
         const { column, _id } = store.state.user
-        // *新建文章 模拟 有可能是undefined ,加一层存在判断
+        // *新建文章 真实 有可能是undefined ,加一层存在判断
         if (column) {
           const newPost: PostProps = {
             title: titleVal.value,
@@ -101,8 +110,10 @@ export default defineComponent({
           if (imageId) {
             newPost.image = imageId
           }
+          const actionName = isEditMode ? 'updatePost' : 'createPost'
+          const sendData = isEditMode ? { id: route.query.id, payload: newPost } : newPost
           // 向vuex提交一个同步的变化
-          store.dispatch('createPost', newPost).then(() => {
+          store.dispatch(actionName, sendData).then(() => {
             createMessage('发表成功,2s 后跳转到文章!', 'success', 2000)
             setTimeout(() => {
               router.push({
@@ -148,6 +159,19 @@ export default defineComponent({
     const onFileUploadedError = (rawData: ResponseType<ImageProps>) => {
       createMessage(`上传图片ID ${rawData.data._id} 失败!`, 'error')
     }
+    // 请求
+    onMounted(() => {
+      if (isEditMode) {
+        store.dispatch('fetchPost', route.query.id).then((rawData: ResponseType<PostProps>) => {
+          const currentPost = rawData.data
+          if (currentPost.image) {
+            uploadedData.value = { data: currentPost.image }
+          }
+          titleVal.value = currentPost.title
+          contentVal.value = currentPost.content || '' // 或者空
+        })
+      }
+    })
     return {
       titleRules,
       titleVal,
@@ -157,7 +181,9 @@ export default defineComponent({
       handleFileUploaded,
       uploadCheck,
       onFileUploadedError,
-      imageId
+      imageId,
+      isEditMode,
+      uploadedData
     }
   }
 })

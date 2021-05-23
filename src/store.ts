@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-23 15:48:10
+ * @LastEditTime: 2021-05-23 21:59:02
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
  */
 import { createStore, Commit } from 'vuex'
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 // import { testPosts } from './testData'
 
 // 用户需要存在的信息
@@ -85,6 +85,21 @@ const postAndCommit = async (url: string, mutationName: string, commit: Commit, 
     return Promise.reject(new Error('network issue'))
   }
 }
+// 支持选择的封装类型参数
+const asyncAndCommit = async (
+  url: string,
+  mutationName: string,
+  commit: Commit,
+  config: AxiosRequestConfig
+) => {
+  try {
+    const { data } = await axios(url, config)
+    commit(mutationName, data)
+    return data // !由于是async类型会返回一个promise
+  } catch (err) {
+    return Promise.reject(new Error('network issue'))
+  }
+}
 
 // 支持传入一个泛型
 const store = createStore<GlobalDataProps>({
@@ -134,6 +149,17 @@ const store = createStore<GlobalDataProps>({
     fetchPost(state, rawData) {
       state.posts = [rawData.data]
     },
+    // *更新文字
+    updatePost(state, { data }) {
+      state.posts = state.posts.map((post) => {
+        if (post._id === data._id) {
+          return data // 更新
+        } else {
+          return post // 保持原来
+        }
+      })
+    },
+
     // *获取当前登录用户
     fetchCurrentUser(state, rawData) {
       // console.log(rawData)
@@ -178,6 +204,13 @@ const store = createStore<GlobalDataProps>({
       // commit('fetchPosts', data)
       // ?第二个参数就是从页面中传过来的数据
       return getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit)
+    },
+    // 更新文字
+    updatePost({ commit }, { id, payload }) {
+      return asyncAndCommit(`/posts/${id}`, 'updatePost', commit, {
+        method: 'patch',
+        data: payload
+      })
     },
     // 获取当前哟用户登录信息
     fetchCurrentUser({ commit }) {

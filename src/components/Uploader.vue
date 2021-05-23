@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType } from 'vue'
+import { defineComponent, ref, PropType, watch } from 'vue'
 import axios from 'axios'
 // *组件生命周期展示 ready ,loading,success,error 多种情况字符串字面量
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
@@ -46,6 +46,10 @@ export default defineComponent({
     // 上传之前校验
     beforeUpload: {
       type: Function as PropType<CheckFunction>
+    },
+    // 上传以后的图片
+    uploaded: {
+      type: Object
     }
   },
   inheritAttrs: false, // !禁止给父组件继承
@@ -54,10 +58,20 @@ export default defineComponent({
   setup(props, context) {
     // *在setup中拿dom节点 加点击事件点击它其实获取的是input框的事件
     const fileInput = ref<null | HTMLInputElement>(null)
-    // *组件状态
-    const fileStatus = ref<UploadStatus>('ready')
-    //  ?传出去的数据在slot上
-    const uploadedData = ref()
+    // *组件状态 存在就代表上传成功
+    const fileStatus = ref<UploadStatus>(props.uploaded ? 'success' : 'ready')
+    //  ?成功传出去的数据在slot上
+    const uploadedData = ref(props.uploaded)
+    // !异步传来的数据变化了
+    watch(
+      () => props.uploaded, // 变成一个fun
+      (newValue) => {
+        if (newValue) {
+          fileStatus.value = 'success'
+          uploadedData.value = newValue // 告诉父组件有值就给
+        }
+      }
+    )
     const triggerUpload = () => {
       if (fileInput.value) {
         fileInput.value.click()

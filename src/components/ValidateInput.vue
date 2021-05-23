@@ -13,20 +13,18 @@
     <input
       v-if="tag !== 'textarea'"
       class="form-control"
-      :value="inputRef.val"
       :class="{ 'is-invalid': inputRef.error }"
       @blur="validateInput"
-      @input="updateValue"
+      v-model="inputRef.val"
       v-bind="$attrs"
     />
     <!-- 新增功能支持textarea -->
     <textarea
       v-else
       class="form-control"
-      :value="inputRef.val"
       :class="{ 'is-invalid': inputRef.error }"
       @blur="validateInput"
-      @input="updateValue"
+      v-model="inputRef.val"
       v-bind="$attrs"
     ></textarea>
     <span v-if="inputRef.error" class="invalid-feedback">{{ inputRef.message }}</span>
@@ -34,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, onMounted } from 'vue'
+import { defineComponent, PropType, reactive, onMounted, computed } from 'vue'
 
 import { emitter } from './ValidateForm.vue'
 
@@ -70,7 +68,15 @@ export default defineComponent({
     // console.log(context.attrs)
     // *输入要包含当前的值，包含错误，包含信息多对象集合 采用reactive
     const inputRef = reactive({
-      val: props.modelValue || '',
+      // !第一种写法
+      // val: props.modelValue || '',
+      // !第二种写法计算属性
+      val: computed({
+        get: () => props.modelValue || '',
+        set: (val) => {
+          context.emit('update:modelValue', val)
+        }
+      }),
       error: false, // 没有错误
       message: '' // 提示语
     })
@@ -103,20 +109,20 @@ export default defineComponent({
       }
       return true // 如果props.rules不存在永远为true
     }
-    // 需要支持v-model的方法 拿到键盘输入
-    const updateValue = (e: KeyboardEvent) => {
-      // 拿到键盘实时输入的值 断言成 HTMLInputElement
-      const targetValue = (e.target as HTMLInputElement).value
-      // 把值赋给targetValue
-      inputRef.val = targetValue
-      // !把事件发送出去 事件名称 ，要发送的值targetValue
-      context.emit('update:modelValue', targetValue)
-    }
+    // // 需要支持v-model的方法 拿到键盘输入
+    // const updateValue = (e: KeyboardEvent) => {
+    //   // 拿到键盘实时输入的值 断言成 HTMLInputElement
+    //   const targetValue = (e.target as HTMLInputElement).value
+    //   // 把值赋给targetValue
+    //   inputRef.val = targetValue
+    //   // !把事件发送出去 事件名称 ，要发送的值targetValue
+    //   context.emit('update:modelValue', targetValue)
+    // }
     // 挂载的时候发送 整个验证函数
     onMounted(() => {
       emitter.emit('form-item-created', validateInput)
     })
-    return { validateInput, inputRef, updateValue }
+    return { validateInput, inputRef }
   }
 })
 </script>
