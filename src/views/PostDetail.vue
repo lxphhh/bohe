@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-22 23:53:09
- * @LastEditTime: 2021-05-23 16:00:13
+ * @LastEditTime: 2021-05-23 23:06:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \bohe\src\views\PostDetail.vue
@@ -87,7 +87,7 @@ export default defineComponent({
     const currentImageUrl = computed(() => {
       if (currentPost.value && currentPost.value.image) {
         const { image } = currentPost.value
-        return (image as ImageProps).url + '?x-oss-process=image/resize,w_850'
+        return (image as ImageProps).url + '?x-oss-process=image/resize,w_837'
       } else {
         return null
       }
