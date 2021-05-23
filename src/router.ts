@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-17 16:26:07
- * @LastEditTime: 2021-05-22 23:54:56
+ * @LastEditTime: 2021-05-23 12:08:39
  * @LastEditors: Please set LastEditors
  * @Description: 路由页面
    TODO:需要一个功能,路由守卫,当用户没有登录的时候不让用户登录我们的主页面
@@ -55,8 +55,8 @@ const router = createRouter({
       meta: { redirectAlreadyLogin: true }
     },
     {
-      path: '/postdetail/:id', // id
-      name: 'postdetail',
+      path: '/posts/:id',
+      name: 'post',
       component: PostDetail
     }
   ]

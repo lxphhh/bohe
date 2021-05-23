@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-22 16:02:43
+ * @LastEditTime: 2021-05-23 12:47:40
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -17,6 +17,8 @@ export interface UserProps {
   nickName?: string
   column?: number // 作者对应创建的专栏
   email?: string
+  avatar?: ImageProps // 加上作者有自己的图片或者默认
+  description?: string // 描述
 }
 
 // 专栏信息接口定义
@@ -75,9 +77,13 @@ const getAndCommit = async (url: string, mutationName: string, commit: Commit) =
 }
 // *POST方法封装获取 四个参数,url mutationName,commit 有一个在vuex里面的Commit类型 payload data数据
 const postAndCommit = async (url: string, mutationName: string, commit: Commit, payload: any) => {
-  const { data } = await axios.post(url, payload)
-  commit(mutationName, data)
-  return data // !由于是async类型会返回一个promise
+  try {
+    const { data } = await axios.post(url, payload)
+    commit(mutationName, data)
+    return data // !由于是async类型会返回一个promise
+  } catch (err) {
+    return Promise.reject(new Error('network issue'))
+  }
 }
 
 // 支持传入一个泛型
@@ -123,6 +129,10 @@ const store = createStore<GlobalDataProps>({
     fetchPosts(state, rawData) {
       const { data } = rawData
       state.posts = data.list // 对象
+    },
+    // *获取对应文字
+    fetchPost(state, rawData) {
+      state.posts = [rawData.data]
     },
     // *获取当前登录用户
     fetchCurrentUser(state, rawData) {
@@ -189,6 +199,10 @@ const store = createStore<GlobalDataProps>({
       return dispatch('login', loginData).then(() => {
         return dispatch('fetchCurrentUser')
       })
+    },
+    // !对应文章
+    fetchPost({ commit }, id) {
+      return getAndCommit(`/posts/${id}`, 'fetchPost', commit)
     }
   },
   // 当值发生变化才会重新开始计算
@@ -206,6 +220,10 @@ const store = createStore<GlobalDataProps>({
     getPostsByCid: (state) => (cid: string) => {
       // ?数组过滤器返回满足条件的值
       return state.posts.filter((post) => post.column == cid)
+    },
+    // *根据文章id找文章
+    getCurrentPost: (state) => (id: string) => {
+      return state.posts.find((post) => post._id === id)
     }
   }
 })

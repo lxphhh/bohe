@@ -35,7 +35,7 @@ import { useStore } from 'vuex'
 // import { testData, testPosts } from '../testData'
 import { GlobalDataProps, ColumnProps } from '../store'
 import PostList from '../components/PostList.vue'
-import { generateFitUrl } from '../helper'
+import { addColumnAvatar } from '../helper'
 
 export default defineComponent({
   name: 'ColumnDetail',
@@ -45,9 +45,6 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const route = useRoute()
-    const defaultImage = ref(
-      'http://fpoimg.com/100x250?text=Preview&bg_color=cf2020&text_color=67aa5a'
-    )
     onMounted(() => {
       store.dispatch('fetchColumn', currentId)
       store.dispatch('fetchPosts', currentId)
@@ -63,13 +60,13 @@ export default defineComponent({
     const column = computed(() => {
       const selectColumn = store.getters.getColumnById(currentId) as ColumnProps | undefined
       if (selectColumn) {
-        generateFitUrl(selectColumn, 80, 80)
+        addColumnAvatar(selectColumn, 100, 100)
       }
       return selectColumn
     })
     const list = computed(() => store.getters.getPostsByCid(currentId))
 
-    return { column, list, defaultImage }
+    return { column, list }
   }
 })
 </script>
