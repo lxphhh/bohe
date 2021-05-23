@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-23 12:47:40
+ * @LastEditTime: 2021-05-23 15:48:10
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -38,7 +38,7 @@ export interface PostProps {
   image?: ImageProps | string // 图片
   createdAt?: string // 创建时间
   column: string | number // 为了分页
-  author?: string //作者
+  author?: string | UserProps //作者
 }
 
 // 重新定义图片的类型 图片可以不存在
