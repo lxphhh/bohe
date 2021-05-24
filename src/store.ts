@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-23 21:59:02
+ * @LastEditTime: 2021-05-25 00:10:57
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -159,7 +159,11 @@ const store = createStore<GlobalDataProps>({
         }
       })
     },
-
+    deletePost(state, rawData) {
+      const { data } = rawData
+      //!满足两者之间不相等的情况       相等的数据就给你删除了
+      state.posts = state.posts.filter((post) => post._id !== data._id)
+    },
     // *获取当前登录用户
     fetchCurrentUser(state, rawData) {
       // console.log(rawData)
@@ -236,6 +240,10 @@ const store = createStore<GlobalDataProps>({
     // !对应文章
     fetchPost({ commit }, id) {
       return getAndCommit(`/posts/${id}`, 'fetchPost', commit)
+    },
+    // !delete
+    deletePost({ commit }, id) {
+      return asyncAndCommit(`/posts/${id}`, 'deletePost', commit, { method: 'delete' })
     }
   },
   // 当值发生变化才会重新开始计算
