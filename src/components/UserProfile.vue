@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-23 11:57:49
- * @LastEditTime: 2021-05-23 11:58:04
+ * @LastEditTime: 2021-05-25 15:19:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \bohe\src\components\UserProfile.vue
@@ -11,7 +11,7 @@
     <div class="d-flex align-items-center">
       <img :src="fitUrl" :alt="user.nickName" class="rounded-circle img-thumbnail" />
       <div class="detail ml-2">
-        <h6 class="d-block mb-0">{{ user.nickName }}</h6>
+        <h6 class="d-block mb-0">&nbsp;{{ user.nickName }}</h6>
         <span class="text-truncate text-muted d-block">{{ user.description }}</span>
       </div>
     </div>

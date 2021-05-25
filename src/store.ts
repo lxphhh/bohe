@@ -1,13 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-25 00:10:57
+ * @LastEditTime: 2021-05-25 15:13:21
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
  */
 import { createStore, Commit } from 'vuex'
 import axios, { AxiosRequestConfig } from 'axios'
+import { arrToObj, objToArr } from './helper'
 // import { testPosts } from './testData'
 
 // 用户需要存在的信息
@@ -48,14 +49,17 @@ export interface ImageProps {
   createdAt?: string // 创建时间
   fitUrl?: string // 是否使用占位图片
 }
-
+// 接口泛型,把ColumnProps和PostProps变成可索引的类型
+interface ListProps<P> {
+  [id: string]: P
+}
 // 使用TS规定整个store的类型全局
 export interface GlobalDataProps {
   token: string
   error: GlobalErrorProps // 错误
   loading: boolean // 是否处于加载的状态
-  columns: ColumnProps[] // Array 专栏
-  posts: PostProps[] // Array 专栏
+  columns: ListProps<ColumnProps> // !Array 专栏  改变成hasMap对象
+  posts: ListProps<PostProps> // !Array 专栏
   user: UserProps // 用户
 }
 // 全局错误封装一下 对象类型
@@ -69,6 +73,13 @@ export interface ResponseType<T = {}> {
   message: string
   data: T //泛型对象
 }
+
+// export interface rawDataType<T = {}> {
+//   count: number
+//   currentPage: number
+//   list?: T
+//   data?: T
+// }
 // *GET方法封装获取 三个参数,url mutationName,commit 有一个在vuex里面的Commit类型
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
   const { data } = await axios.get(url)
@@ -107,8 +118,8 @@ const store = createStore<GlobalDataProps>({
     token: localStorage.getItem('token') || '',
     error: { status: false },
     loading: false,
-    columns: [],
-    posts: [],
+    columns: {},
+    posts: {},
     // user: { isLogin: false }
     user: { isLogin: false }
   },
@@ -126,43 +137,47 @@ const store = createStore<GlobalDataProps>({
     },
     // *处理新建文章的逻辑
     createPost(state, newPost) {
-      state.posts.push(newPost)
+      // state.posts.push(newPost)
+      state.posts[newPost.id] = newPost // ?直接对象赋值
     },
     // *获取所有的文章 ok
     fetchColumns(state, rawData) {
+      // console.log(rawData)
       const { data } = rawData
-      state.columns = data.list
+      state.columns = arrToObj(data.list) // ?数组变成对象
     },
     // *获取对应的文章 ok
     fetchColumn(state, rawData) {
       // console.log(rawData)
       // 问题解决为什么是数组的原因,是因为前面规定了多篇文章是[{}]的形式
       const { data } = rawData
-      state.columns = [data] // *里面是一个数组 由columns决定的
+      state.columns[data._id] = data // ?key-value赋值
     },
     // *获取专栏对应的文章
     fetchPosts(state, rawData) {
       const { data } = rawData
-      state.posts = data.list // 对象
+      state.posts = arrToObj(data.list) // 对象
     },
     // *获取对应文字
     fetchPost(state, rawData) {
-      state.posts = [rawData.data]
+      state.posts[rawData.data._id] = rawData.data
     },
     // *更新文字
     updatePost(state, { data }) {
-      state.posts = state.posts.map((post) => {
-        if (post._id === data._id) {
-          return data // 更新
-        } else {
-          return post // 保持原来
-        }
-      })
+      // state.posts = state.posts.map((post) => {
+      //   if (post._id === data._id) {
+      //     return data // 更新
+      //   } else {
+      //     return post // 保持原来
+      //   }
+      // })
+      state.posts[data._id] = data // ?拿到id就赋值
     },
     deletePost(state, rawData) {
       const { data } = rawData
       //!满足两者之间不相等的情况       相等的数据就给你删除了
-      state.posts = state.posts.filter((post) => post._id !== data._id)
+      // state.posts = state.posts.filter((post) => post._id !== data._id)
+      delete state.posts[data._id]
     },
     // *获取当前登录用户
     fetchCurrentUser(state, rawData) {
@@ -255,16 +270,22 @@ const store = createStore<GlobalDataProps>({
     // *根据id来寻找文章 返回一个函数 返回一个箭头函数
     getColumnById: (state) => (id: string) => {
       // ?find就是寻找匹配的项
-      return state.columns.find((c) => c._id === id)
+      // return state.columns.find((c) => c._id === id)
+      return state.columns[id]
     },
     // *根据文章id来寻找下面的文章id
     getPostsByCid: (state) => (cid: string) => {
       // ?数组过滤器返回满足条件的值
-      return state.posts.filter((post) => post.column == cid)
+      return objToArr(state.posts).filter((post) => post.column == cid)
     },
     // *根据文章id找文章
     getCurrentPost: (state) => (id: string) => {
-      return state.posts.find((post) => post._id === id)
+      // return state.posts.find((post) => post._id === id)
+      return state.posts[id]
+    },
+    // 获取所有文章
+    getColumns: (state) => {
+      return objToArr(state.columns) // !把当前的对象变成数组
     }
   }
 })

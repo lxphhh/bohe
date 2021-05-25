@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-22 14:28:09
+ * @LastEditTime: 2021-05-25 15:08:08
  * @LastEditors: Please set LastEditors
  * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
@@ -46,8 +46,8 @@ export default defineComponent({
   setup() {
     // GlobalDataProps获得类型补全
     const store = useStore<GlobalDataProps>()
-    // !vuex的数据多从计算属性里面读取
-    const list = computed(() => store.state.columns)
+    // !vuex的数据多从计算属性里面读取 在getter中读取
+    const list = computed(() => store.getters.getColumns)
 
     onMounted(() => {
       // 异步方法
