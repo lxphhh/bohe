@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-25 16:12:02
+ * @LastEditTime: 2021-05-25 16:29:14
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -248,8 +248,13 @@ const store = createStore<GlobalDataProps>({
     },
     // !对应文章
     fetchPost({ state, commit }, id) {
-      if (!state.posts.data._id) {
+      const { data } = state.posts
+      const certainPost = data[id]
+      // !当前文章不存在,或者内容没有就再发一次ajax请求
+      if (!certainPost || !certainPost.content) {
         return asyncAndCommit(`/posts/${id}`, 'fetchPost', commit)
+      } else {
+        return Promise.resolve({ data: certainPost }) // !返回一个Promise来手动解决11-6的报错
       }
     },
     // !delete
