@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-25 15:13:21
+ * @LastEditTime: 2021-05-25 16:12:02
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -53,13 +53,23 @@ export interface ImageProps {
 interface ListProps<P> {
   [id: string]: P
 }
+
+export interface GlobalColumnsProps {
+  data: ListProps<ColumnProps>
+  loaded: boolean // 是否
+}
+export interface GlobalPostsProps {
+  data: ListProps<PostProps>
+  loadedColumns: string[] // 数组
+  loadedDetails: string[] // 数组
+}
 // 使用TS规定整个store的类型全局
 export interface GlobalDataProps {
   token: string
   error: GlobalErrorProps // 错误
   loading: boolean // 是否处于加载的状态
-  columns: ListProps<ColumnProps> // !Array 专栏  改变成hasMap对象
-  posts: ListProps<PostProps> // !Array 专栏
+  columns: GlobalColumnsProps // !Array 专栏  改变成hasMap对象
+  posts: GlobalPostsProps // !Array 专栏
   user: UserProps // 用户
 }
 // 全局错误封装一下 对象类型
@@ -96,19 +106,24 @@ const postAndCommit = async (url: string, mutationName: string, commit: Commit, 
     return Promise.reject(new Error('network issue'))
   }
 }
-// 支持选择的封装类型参数
+// !支持选择的封装类型参数 extraData?:any 是否加载更多
 const asyncAndCommit = async (
   url: string,
   mutationName: string,
   commit: Commit,
-  config: AxiosRequestConfig
+  config: AxiosRequestConfig = { method: 'get' },
+  extraData?: any
 ) => {
-  try {
-    const { data } = await axios(url, config)
-    commit(mutationName, data)
-    return data // !由于是async类型会返回一个promise
-  } catch (err) {
-    return Promise.reject(new Error('network issue'))
+  const { data } = await axios(url, config)
+  if (extraData) {
+    commit(mutationName, { data, extraData })
+  } else {
+    try {
+      commit(mutationName, data)
+      return data // !由于是async类型会返回一个promise
+    } catch (err) {
+      return Promise.reject(new Error('network issue'))
+    }
   }
 }
 
@@ -118,8 +133,8 @@ const store = createStore<GlobalDataProps>({
     token: localStorage.getItem('token') || '',
     error: { status: false },
     loading: false,
-    columns: {},
-    posts: {},
+    columns: { data: {}, loaded: false },
+    posts: { data: {}, loadedColumns: [], loadedDetails: [] },
     // user: { isLogin: false }
     user: { isLogin: false }
   },
@@ -138,29 +153,32 @@ const store = createStore<GlobalDataProps>({
     // *处理新建文章的逻辑
     createPost(state, newPost) {
       // state.posts.push(newPost)
-      state.posts[newPost.id] = newPost // ?直接对象赋值
+      state.posts.data[newPost.id] = newPost // ?直接对象赋值
     },
     // *获取所有的文章 ok
     fetchColumns(state, rawData) {
       // console.log(rawData)
       const { data } = rawData
-      state.columns = arrToObj(data.list) // ?数组变成对象
+      state.columns.data = arrToObj(data.list) // ?数组变成对象
     },
     // *获取对应的文章 ok
     fetchColumn(state, rawData) {
       // console.log(rawData)
       // 问题解决为什么是数组的原因,是因为前面规定了多篇文章是[{}]的形式
       const { data } = rawData
-      state.columns[data._id] = data // ?key-value赋值
+      state.columns.data[data._id] = data // ?key-value赋值
     },
     // *获取专栏对应的文章
-    fetchPosts(state, rawData) {
+    fetchPosts(state, { data: rawData, extraData: columnId }) {
       const { data } = rawData
-      state.posts = arrToObj(data.list) // 对象
+      // !记得里面的操作是不断合并的过程,而不是替换的过程
+      state.posts.data = { ...state.posts.data, ...arrToObj(data.list) } // 对象
+      // ?已经请求过的就存起来
+      state.posts.loadedColumns.push(columnId)
     },
     // *获取对应文字
     fetchPost(state, rawData) {
-      state.posts[rawData.data._id] = rawData.data
+      state.posts.data[rawData.data._id] = rawData.data
     },
     // *更新文字
     updatePost(state, { data }) {
@@ -171,13 +189,13 @@ const store = createStore<GlobalDataProps>({
       //     return post // 保持原来
       //   }
       // })
-      state.posts[data._id] = data // ?拿到id就赋值
+      state.posts.data[data._id] = data // ?拿到id就赋值
     },
     deletePost(state, rawData) {
       const { data } = rawData
       //!满足两者之间不相等的情况       相等的数据就给你删除了
       // state.posts = state.posts.filter((post) => post._id !== data._id)
-      delete state.posts[data._id]
+      delete state.posts.data[data._id]
     },
     // *获取当前登录用户
     fetchCurrentUser(state, rawData) {
@@ -205,11 +223,13 @@ const store = createStore<GlobalDataProps>({
   // !其实action的本质就是一个Promise当然支持多层Promise嵌套来实现需求 解构context方法
   actions: {
     // *获取所有的文章 修改async await
-    fetchColumns({ commit }) {
+    fetchColumns({ state, commit }) {
       // const { data } = await axios.get('/columns')
       // commit('fetchColumns', data)
       // ?1.向mutation来提交数据
-      return getAndCommit('/columns', 'fetchColumns', commit)
+      if (!state.columns.loaded) {
+        return asyncAndCommit('/columns', 'fetchColumns', commit)
+      }
     },
     // *展开运算就是直接把context解构出来 原来的写法在第一个上面
     fetchColumn({ commit }, cid) {
@@ -218,11 +238,23 @@ const store = createStore<GlobalDataProps>({
       // ?第二个参数就是从页面中传过来的数据
       return getAndCommit(`/columns/${cid}`, 'fetchColumn', commit)
     },
-    fetchPosts({ commit }, cid) {
+    fetchPosts({ state, commit }, cid) {
       // const { data } = await axios.get(`/columns/${cid}/posts`)
       // commit('fetchPosts', data)
-      // ?第二个参数就是从页面中传过来的数据
-      return getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit)
+      // ?第二个参数就是从页面中传过来的数据 // 如果不包含里面就进行一次请求
+      if (!state.posts.loadedColumns.includes(cid)) {
+        return asyncAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit, { method: 'get' }, cid)
+      }
+    },
+    // !对应文章
+    fetchPost({ state, commit }, id) {
+      if (!state.posts.data._id) {
+        return asyncAndCommit(`/posts/${id}`, 'fetchPost', commit)
+      }
+    },
+    // !delete
+    deletePost({ commit }, id) {
+      return asyncAndCommit(`/posts/${id}`, 'deletePost', commit, { method: 'delete' })
     },
     // 更新文字
     updatePost({ commit }, { id, payload }) {
@@ -233,16 +265,16 @@ const store = createStore<GlobalDataProps>({
     },
     // 获取当前哟用户登录信息
     fetchCurrentUser({ commit }) {
-      return getAndCommit('/user/current', 'fetchCurrentUser', commit)
+      return asyncAndCommit('/user/current', 'fetchCurrentUser', commit)
     },
     // 登录
     login({ commit }, payload) {
       // !return返回出去 相当于一个promise
-      return postAndCommit('/user/login', 'login', commit, payload)
+      return asyncAndCommit('/user/login', 'login', commit, { method: 'post', data: payload })
     },
     createPost({ commit }, payload) {
       // !return返回出去 相当于一个promise
-      return postAndCommit('/posts', 'createPost', commit, payload)
+      return asyncAndCommit('/posts', 'createPost', commit, { method: 'post', data: payload })
     },
     // !组合登录,可以登录并且从登录中获取当前用户
     loginAndFetch({ dispatch }, loginData) {
@@ -251,14 +283,6 @@ const store = createStore<GlobalDataProps>({
       return dispatch('login', loginData).then(() => {
         return dispatch('fetchCurrentUser')
       })
-    },
-    // !对应文章
-    fetchPost({ commit }, id) {
-      return getAndCommit(`/posts/${id}`, 'fetchPost', commit)
-    },
-    // !delete
-    deletePost({ commit }, id) {
-      return asyncAndCommit(`/posts/${id}`, 'deletePost', commit, { method: 'delete' })
     }
   },
   // 当值发生变化才会重新开始计算
@@ -271,21 +295,21 @@ const store = createStore<GlobalDataProps>({
     getColumnById: (state) => (id: string) => {
       // ?find就是寻找匹配的项
       // return state.columns.find((c) => c._id === id)
-      return state.columns[id]
+      return state.columns.data[id]
     },
     // *根据文章id来寻找下面的文章id
     getPostsByCid: (state) => (cid: string) => {
       // ?数组过滤器返回满足条件的值
-      return objToArr(state.posts).filter((post) => post.column == cid)
+      return objToArr(state.posts.data).filter((post) => post.column == cid)
     },
     // *根据文章id找文章
     getCurrentPost: (state) => (id: string) => {
       // return state.posts.find((post) => post._id === id)
-      return state.posts[id]
+      return state.posts.data[id]
     },
     // 获取所有文章
     getColumns: (state) => {
-      return objToArr(state.columns) // !把当前的对象变成数组
+      return objToArr(state.columns.data) // !把当前的对象变成数组
     }
   }
 })
