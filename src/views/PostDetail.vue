@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-22 23:53:09
- * @LastEditTime: 2021-05-25 00:20:56
+ * @LastEditTime: 2021-05-25 11:10:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \bohe\src\views\PostDetail.vue
@@ -90,7 +90,7 @@ export default defineComponent({
         createMessage('删除成功两秒以后返回专栏首页!', 'success', 2000)
         setTimeout(() => {
           router.push({ name: 'column', params: { id: rawData?.data?.column } })
-        })
+        }, 2000)
       })
     }
     onMounted(() => {
@@ -118,7 +118,7 @@ export default defineComponent({
     const currentImageUrl = computed(() => {
       if (currentPost.value && currentPost.value.image) {
         const { image } = currentPost.value
-        return (image as ImageProps).url + '?x-oss-process=image/resize,w_837'
+        return (image as ImageProps).url + '?x-oss-process=image/resize,w_972'
       } else {
         return null
       }

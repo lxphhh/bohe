@@ -127,7 +127,7 @@ export default defineComponent({
     }
     // 上传图片校验方法
     const uploadCheck = (file: File) => {
-      debugger
+      // debugger
       const result = beforeUploadCheck(file, { format: ['image/png', 'image/jpeg'], size: 1 })
       const { passed, err } = result
       if (err === 'format') {

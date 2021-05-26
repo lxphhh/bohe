@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-24 22:03:59
- * @LastEditTime: 2021-05-24 22:23:34
+ * @LastEditTime: 2021-05-25 09:21:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \bohe\src\components\Modal.vue
@@ -13,8 +13,14 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">{{ title }}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true" @click="onClose">&times;</span>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              @click="onClose"
+            >
+              <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">

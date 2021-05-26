@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-17 08:50:36
- * @LastEditTime: 2021-05-21 13:59:20
+ * @LastEditTime: 2021-05-25 15:09:42
  * @LastEditors: Please set LastEditors
  * @Description: 导入main.ts
  * @FilePath: \bohe\src\main.ts
@@ -37,10 +37,8 @@ axios.interceptors.request.use((config) => {
 // !响应拦截器 还能里面有错误的方法
 axios.interceptors.response.use(
   (config) => {
-    setTimeout(() => {
-      // 1 loading拦截器
-      store.commit('setLoading', false)
-    }, 200)
+    // 1 loading拦截器
+    store.commit('setLoading', false)
     return config // 记得返回
   },
   // !可以获取错误

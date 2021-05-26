@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-22 14:27:11
- * @LastEditTime: 2021-05-23 13:03:27
+ * @LastEditTime: 2021-05-25 15:09:14
  * @LastEditors: Please set LastEditors
  * @Description: 验证函数
  * @FilePath: \bohe\src\helper.ts
@@ -62,6 +62,42 @@ export function beforeUploadCheck(file: File, condition: CheckCondition) {
     err
   }
 }
+interface TestPosts {
+  _id: string
+  name: string
+}
+// !需求就是把数组对象,变成key-value形式的obj
+const testData: TestPosts[] = [
+  { _id: '1', name: 'avatar' },
+  { _id: '2', name: '2收2' }
+]
+const testData2: { [key: string]: TestPosts } = {
+  1: { _id: '1', name: 'avatar' },
+  2: { _id: '2', name: '2收2' }
+}
+
+// !传来的数组类型不确定
+export const arrToObj = <T extends { _id?: string }>(arr: Array<T>) => {
+  // 数组归并操作
+  return arr.reduce((prev, current) => {
+    // !约束泛型,让泛型上面必须存在这个条件_id
+    if (current._id) {
+      // !对象推断成了一个对象,需要一个类型断言成[key: string]: T
+      prev[current._id] = current
+    }
+    return prev
+  }, {} as { [key: string]: T })
+}
+// !把对象变成数组
+export const objToArr = <T>(obj: { [key: string]: T }) => {
+  // 获得对象的key 把数组的值变成数组的value
+  return Object.keys(obj).map((key) => obj[key])
+}
+
+const result = arrToObj(testData)
+const result2 = objToArr(testData2)
+// console.log('result2', result2)
+// console.log('result', result)
 
 // export function generateFitUrl(column: ColumnProps, width: number, height: number) {
 //   if (column.avatar) {
