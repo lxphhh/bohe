@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-25 00:10:57
+ * @LastEditTime: 2021-05-26 20:20:28
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -88,7 +88,7 @@ const postAndCommit = async (url: string, mutationName: string, commit: Commit, 
 // 支持选择的封装类型参数
 const asyncAndCommit = async (
   url: string,
-  mutationName: string,
+  mutationName: string, // 表示要触发的mutation名字
   commit: Commit,
   config: AxiosRequestConfig
 ) => {
