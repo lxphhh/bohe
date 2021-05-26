@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-25 15:08:08
+ * @LastEditTime: 2021-05-26 21:45:03
  * @LastEditors: Please set LastEditors
  * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
@@ -28,6 +28,14 @@
     </section>
     <h4 class="font-weight-bold text-center">发现精彩</h4>
     <column-list :list="list"></column-list>
+    <div
+      class="btn-outline-primary btn mt-2 mb-5  m-auto w-25"
+      style="display: block;"
+      @click="loadMorePage"
+      v-if="!isLastPage"
+    >
+      加载更多
+    </div>
   </div>
 </template>
 
@@ -37,6 +45,7 @@ import { useStore } from 'vuex'
 
 import { GlobalDataProps } from '../store'
 import ColumnList from '../components/ColumnList.vue'
+import useLoadMore from '../hooks/useLoadMore'
 
 export default defineComponent({
   name: 'Home',
@@ -48,13 +57,19 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     // !vuex的数据多从计算属性里面读取 在getter中读取
     const list = computed(() => store.getters.getColumns)
-
+    const total = computed(() => store.state.columns.total)
     onMounted(() => {
       // 异步方法
-      store.dispatch('fetchColumns') // 获取文章
+      store.dispatch('fetchColumns', { pageSize: 3 }) // 获取文章
+    })
+    const { loadMorePage, isLastPage } = useLoadMore('fetchColumns', total, {
+      pageSize: 3,
+      currentPage: 2
     })
     return {
-      list
+      list,
+      loadMorePage,
+      isLastPage
     }
   }
 })

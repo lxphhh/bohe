@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-18 11:17:57
- * @LastEditTime: 2021-05-25 16:29:14
+ * @LastEditTime: 2021-05-26 21:22:02
  * @LastEditors: Please set LastEditors
  * @Description: Vuex
  * @FilePath: \bohe\src\store.ts
@@ -57,6 +57,7 @@ interface ListProps<P> {
 export interface GlobalColumnsProps {
   data: ListProps<ColumnProps>
   loaded: boolean // 是否
+  total: number // 分页
 }
 export interface GlobalPostsProps {
   data: ListProps<PostProps>
@@ -133,7 +134,7 @@ const store = createStore<GlobalDataProps>({
     token: localStorage.getItem('token') || '',
     error: { status: false },
     loading: false,
-    columns: { data: {}, loaded: false },
+    columns: { data: {}, loaded: false, total: 0 },
     posts: { data: {}, loadedColumns: [], loadedDetails: [] },
     // user: { isLogin: false }
     user: { isLogin: false }
@@ -158,8 +159,15 @@ const store = createStore<GlobalDataProps>({
     // *获取所有的文章 ok
     fetchColumns(state, rawData) {
       // console.log(rawData)
-      const { data } = rawData
-      state.columns.data = arrToObj(data.list) // ?数组变成对象
+      // const { data } = rawData
+      // state.columns.data = arrToObj(data.list) // ?数组变成对象
+      const { data } = state.columns
+      const { list, count } = rawData.data
+      state.columns = {
+        data: { ...data, ...arrToObj(list) }, // 不断添加
+        total: count,
+        loaded: true
+      }
     },
     // *获取对应的文章 ok
     fetchColumn(state, rawData) {
@@ -223,13 +231,20 @@ const store = createStore<GlobalDataProps>({
   // !其实action的本质就是一个Promise当然支持多层Promise嵌套来实现需求 解构context方法
   actions: {
     // *获取所有的文章 修改async await
-    fetchColumns({ state, commit }) {
+    // TODO : 分页版本 多一个参数 params ={}
+    fetchColumns({ state, commit }, params = {}) {
       // const { data } = await axios.get('/columns')
       // commit('fetchColumns', data)
+      const { currentPage = 1, pageSize = 6 } = params
       // ?1.向mutation来提交数据
-      if (!state.columns.loaded) {
-        return asyncAndCommit('/columns', 'fetchColumns', commit)
-      }
+      // if (!state.columns.loaded) {
+      //   return asyncAndCommit('/columns', 'fetchColumns', commit)
+      // }
+      return asyncAndCommit(
+        `/columns?currentPage=${currentPage}&pageSize=${pageSize}`,
+        'fetchColumns',
+        commit
+      )
     },
     // *展开运算就是直接把context解构出来 原来的写法在第一个上面
     fetchColumn({ commit }, cid) {
