@@ -80,7 +80,7 @@ const testData2: { [key: string]: TestPosts } = {
 export const arrToObj = <T extends { _id?: string }>(arr: Array<T>) => {
   // 数组归并操作
   return arr.reduce((prev, current) => {
-    // !约束泛型,让泛型上面必须存在这个条件_id
+    // !约束泛型,让泛型上面必须存在这个条件_id extends { _id?: string }
     if (current._id) {
       // !对象推断成了一个对象,需要一个类型断言成[key: string]: T
       prev[current._id] = current

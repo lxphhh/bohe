@@ -1,18 +1,9 @@
 /*
  * @Author: your name
  * @Date: 2021-05-26 21:07:11
- * @LastEditTime: 2021-05-26 21:53:40
+ * @LastEditTime: 2021-05-27 19:10:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \bohe\src\hooks\useLoadMore.ts
- */
-/*
- * @Author: your name
- * @Date: 2021-05-26 20:27:52
- * @LastEditTime: 2021-05-26 21:00:04
- * @LastEditors: Please set LastEditors
- * @Description: 加载更多的组件,
-   TODO:可以有一个发送请求的逻辑,并且可以有一个随时变化的total,属性computedRef
  * @FilePath: \bohe\src\hooks\useLoadMore.ts
  */
 import { ref, ComputedRef, computed } from 'vue'
