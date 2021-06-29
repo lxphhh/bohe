@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-05-17 08:50:36
- * @LastEditTime: 2021-05-25 15:09:42
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-06-29 21:57:29
+ * @LastEditors: Lxphhh
  * @Description: 导入main.ts
  * @FilePath: \bohe\src\main.ts
  */
@@ -22,14 +22,14 @@ axios.interceptors.request.use((config) => {
   store.commit('setError', { status: false, message: '' }) // 重置一下
   // 对象展开符代表前面的参数都需要
   // *get 请求，添加到 url 中
-  config.params = { ...config.params, icode: '36C1A30D1795DB99' }
+  config.params = { ...config.params, icode: '01CA9B7E077A9935' }
   // 其他请求，添加到 body 中
   // *如果是上传文件，添加到 FormData 中
   if (config.data instanceof FormData) {
-    config.data.append('icode', '36C1A30D1795DB99')
+    config.data.append('icode', '01CA9B7E077A9935')
   } else {
     // *普通的 body 对象，添加到 data 中 便捷的添加key-value
-    config.data = { ...config.data, icode: '36C1A30D1795DB99' }
+    config.data = { ...config.data, icode: '01CA9B7E077A9935' }
   }
   return config // 记得返回
 })
