@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-17 22:05:37
- * @LastEditTime: 2021-05-26 21:45:03
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-11-14 16:38:06
+ * @LastEditors: LSC
  * @Description: 主页面
  * @FilePath: \bohe\src\views\Home.vue
 -->

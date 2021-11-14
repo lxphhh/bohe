@@ -5660,10 +5660,10 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-markdown-it@^11.0.0:
+markdown-it@^11.0.1:
   version "11.0.1"
-  resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-11.0.1.tgz#b54f15ec2a2193efa66dda1eb4173baea08993d6"
-  integrity sha512-aU1TzmBKcWNNYvH9pjq6u92BML+Hz3h5S/QpfTFwiQF852pLT+9qHsrhM9JYipkOXZxGn+sGH8oyJE9FD9WezQ==
+  resolved "https://registry.nlark.com/markdown-it/download/markdown-it-11.0.1.tgz?cache=0&sync_timestamp=1627929816808&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fmarkdown-it%2Fdownload%2Fmarkdown-it-11.0.1.tgz#b54f15ec2a2193efa66dda1eb4173baea08993d6"
+  integrity sha1-tU8V7Cohk++mbdoetBc7rqCJk9Y=
   dependencies:
     argparse "^1.0.7"
     entities "~2.0.0"
