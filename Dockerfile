@@ -9,8 +9,6 @@ RUN yarn  install
 COPY . /app
 RUN yarn build
 
-# STAGE 2
-
 FROM node:12-alpine
 WORKDIR /app
 RUN npm install -g webserver.local
