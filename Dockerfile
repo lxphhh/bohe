@@ -1,5 +1,5 @@
 # !/bin/bash
-# STAGE 1
+# STAGE 1 e
 
 FROM node:12-alpine AS build
 WORKDIR /app
