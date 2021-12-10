@@ -8,7 +8,7 @@
 -->
 
 # bohe
-
+一个分享生活,使用webstore开发的博客系统
 ## Project setup
 
 ```
